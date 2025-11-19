@@ -1,11 +1,10 @@
 import { html } from 'lit';
 import '../components/fablr-button.js';
 
-// Self-registering story pattern
-const meta = { title: 'Fablr Button', component: 'fablr-button' };
+const meta = { title: 'Fablr Button', component: 'fablr-button', args: { label: 'Primary Button', disabled: false } };
 const stories = {
-  Primary: () => html`<fablr-button label="Primary Button"></fablr-button>`,
-  Disabled: () => html`<fablr-button label="Disabled" ?disabled=${true}></fablr-button>`
+  Primary: (args) => html`<fablr-button label=${args.label} ?disabled=${args.disabled}></fablr-button>`,
+  Disabled: (args) => html`<fablr-button label=${args.label} ?disabled=${args.disabled}></fablr-button>`
 };
 
 window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
