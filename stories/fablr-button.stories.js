@@ -1,10 +1,22 @@
-import { html } from 'lit';
-import '../components/fablr-button.js';
+import { html } from "lit";
+import "../components/fablr-button.js";
 
-const meta = { title: 'Fablr Button', component: 'fablr-button', args: { label: 'Primary Button', disabled: false } };
+const meta = {
+  title: "Fablr Button",
+  component: "fablr-button",
+  args: { label: "Primary Button", disabled: false },
+};
 const stories = {
-  Primary: (args) => html`<fablr-button label=${args.label} ?disabled=${args.disabled}></fablr-button>`,
-  Disabled: (args) => html`<fablr-button label=${args.label} ?disabled=${args.disabled}></fablr-button>`
+  Primary: (args) =>
+    html`<fablr-button
+      label=${args.label}
+      ?disabled=${args.disabled}
+    ></fablr-button>`,
+  Disabled: (_args) =>
+    html`<fablr-button
+      label="Disabled Button"
+      ?disabled=${true}
+    ></fablr-button>`,
 };
 
 window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];

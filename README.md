@@ -18,6 +18,7 @@ Live demo: https://artmsilva.github.io/Fablr/
 This repository is configured to publish via GitHub Pages using the workflow at `.github/workflows/deploy-pages.yml`. The workflow uploads the repository root and deploys it to Pages on every push to the `main` branch.
 
 If you prefer to enable Pages manually instead of using the workflow:
+
 1. Go to the repository → Settings → Pages.
 2. Choose Branch: `main` and Folder: `/ (root)`.
 3. Save.
@@ -30,16 +31,41 @@ After the workflow runs or Pages is enabled, the site will be available at:
 Serve the repository root over HTTP (do not open via file://). Example:
 
 - Quick (Python):
+
 ```bash
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
 - Or with Node:
+
 ```bash
 npx http-server -c-1 .
 # open http://localhost:8080 (or port shown)
 ```
+
+## Linting and Formatting
+
+This project uses [Biome](https://biomejs.dev/) for fast linting and formatting (no node_modules install required with npx):
+
+```bash
+# Check for issues (lint + format)
+npm run check
+
+# Auto-fix all issues
+npm run check:fix
+
+# Lint only
+npm run lint
+
+# Lint and auto-fix
+npm run lint:fix
+
+# Format only
+npm run format
+```
+
+All commands use `npx @biomejs/biome` so no local installation is needed.
 
 ## Regenerate stories index
 
@@ -60,6 +86,7 @@ Commit the updated `stories/index.js` and push to trigger the Pages workflow.
 - If you see 404s for component or story files in the browser console, verify the files exist at the same paths used by the imports (components/ and stories/).
 
 ## Next ideas (optional)
+
 - Add a small live-reload dev server (no bundler) so the UI updates as you edit files.
 - Improve controls (argTypes) and add more sample components and stories.
 - Add a GitHub Pages custom domain (CNAME) if you want a custom hostname.

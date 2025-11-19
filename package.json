@@ -1,0 +1,21 @@
+{
+  "name": "fablr",
+  "version": "1.0.0",
+  "description": "A simple component story explorer built with Lit",
+  "type": "module",
+  "scripts": {
+    "lint": "npx @biomejs/biome lint .",
+    "lint:fix": "npx @biomejs/biome lint --write .",
+    "format": "npx @biomejs/biome format --write .",
+    "check": "npx @biomejs/biome check .",
+    "check:fix": "npx @biomejs/biome check --write ."
+  },
+  "keywords": [
+    "web-components",
+    "lit",
+    "storybook",
+    "components"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from "lit";
 
 class FablrButton extends LitElement {
   static properties = {
@@ -27,7 +27,7 @@ class FablrButton extends LitElement {
 
   constructor() {
     super();
-    this.label = 'Button';
+    this.label = "Button";
     this.disabled = false;
   }
 
@@ -36,4 +36,4 @@ class FablrButton extends LitElement {
   }
 }
 
-customElements.define('fablr-button', FablrButton);
+customElements.define("fablr-button", FablrButton);
