@@ -1,6 +1,8 @@
 import { css, html, LitElement } from "lit";
 
 class FablrInput extends LitElement {
+  static status = "beta";
+
   static properties = {
     label: { type: String },
     placeholder: { type: String },
@@ -12,19 +14,22 @@ class FablrInput extends LitElement {
       display: contents;
     }
     label {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--space-base) * 1.5);
+    }
+    span {
       font-size: var(--font-label);
-      margin-bottom: calc(var(--space-base) * 1.5);
-      color: color-mix(in srgb, var(--secondary-color) 85%, black);
+      color: var(--text-primary);
       font-family: var(--font-stack);
     }
     input {
       width: max-content;
       padding: var(--space-2) calc(var(--space-base) * 2.5);
-      border: 1px solid var(--secondary-color);
       border-radius: calc(var(--space-base) * 1.5);
       font-size: var(--font-body);
       font-family: var(--font-stack);
+      border-color: var(--secondary-color);
     }
     input:focus {
       outline: 2px solid var(--primary-color);
@@ -41,15 +46,19 @@ class FablrInput extends LitElement {
 
   render() {
     return html`
-      ${this.label ? html`<label>${this.label}</label>` : ""}
-      <input
-        .value=${this.value}
-        placeholder=${this.placeholder}
-        @input=${(e) => {
-          this.value = e.target.value;
-          this.dispatchEvent(new CustomEvent("input", { detail: this.value }));
-        }}
-      />
+      <label>
+        ${this.label ? html`<span>${this.label}</span>` : ""}
+        <input
+          .value=${this.value}
+          placeholder=${this.placeholder}
+          @input=${(e) => {
+            this.value = e.target.value;
+            this.dispatchEvent(
+              new CustomEvent("input", { detail: this.value })
+            );
+          }}
+        />
+      </label>
     `;
   }
 }
@@ -58,9 +67,8 @@ customElements.define("fablr-input", FablrInput);
 
 // Stories
 const meta = {
-  title: "Fablr Input",
   component: "fablr-input",
-  args: { label: "Name", placeholder: "Enter name", value: "" },
+  args: { label: "Name", placeholder: "Enter name" },
 };
 const stories = {
   Default: (args) =>

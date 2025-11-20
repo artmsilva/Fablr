@@ -1,23 +1,21 @@
 import { css, html, LitElement } from "lit";
 
-/**
- * A simple button component for Fablr design system.
- * @element fablr-button
- * @slot - The button label.
- * @csspart button - The button element.
- */
 class FablrButton extends LitElement {
+  static status = "alpha";
+
   static properties = {
     disabled: { type: Boolean },
-    variant: { type: String, reflect: true },
+    variant: {
+      type: String,
+      reflect: true,
+      // Custom enum definition for story controls
+      enum: ["primary", "secondary"],
+    },
   };
 
   static styles = css`
     :host {
       display: contents;
-      --component: fablr-button;
-      --component-type: button;
-      --component-status: stable;
       --opacity: 1;
     }
     :host([variant="primary"]) {
@@ -85,9 +83,7 @@ customElements.define("fablr-button", FablrButton);
  * Meta information for Fablr Button component
  */
 const meta = {
-  title: "Fablr Button",
   component: "fablr-button",
-  args: { disabled: false, variant: "primary" },
   slots: {
     default: "Primary Button",
   },

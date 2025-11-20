@@ -3,6 +3,11 @@ import "./components/fablr-button.js";
 import "./components/fablr-card.js";
 import "./components/fablr-input.js";
 import "./components/fablr-link.js";
+import "./components/fablr-select.js";
+import "./components/fablr-checkbox.js";
+import "./components/fablr-textarea.js";
+import "./components/fablr-badge.js";
+import "./components/fablr-icon-button.js";
 
 class FablrApp extends LitElement {
   static styles = css`
@@ -16,16 +21,35 @@ class FablrApp extends LitElement {
       gap: 0;
     }
     #sidebar {
-      border-right: 1px solid #e0e0e0;
+      border-right: 1px solid var(--border-color);
       padding: 20px;
+      background-color: var(--bg-secondary);
+      overflow-y: auto;
     }
     #preview {
       padding: 20px;
-      border-right: 1px solid #e0e0e0;
+      border-right: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
     }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .preview-header h3 {
+      margin: 0;
+    }
+
     #controls-sidebar {
       padding: 20px;
       overflow-y: auto;
+      background-color: var(--bg-secondary);
     }
     .story-group {
       margin-bottom: 16px;
@@ -44,36 +68,17 @@ class FablrApp extends LitElement {
       margin-top: 0;
       padding-top: 0;
       border-top: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
     }
     .control {
-      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
-    .control label {
-      display: grid;
-      grid-template-rows: auto auto;
-      gap: 6px;
-      font-style: italic;
-
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-    }
-    .control input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-    }
-    .control input[type="text"] {
-      padding: 6px 8px;
-    }
-    .control textarea {
-      padding: 6px 8px;
-      font-family: var(--font-stack);
-      font-size: var(--font-body);
-      resize: vertical;
-    }
-    .control input:disabled,
-    .control textarea:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .control fablr-button {
+      align-self: flex-start;
     }
   `;
 
@@ -90,8 +95,72 @@ class FablrApp extends LitElement {
     this.stories = window.__FABLR_STORIES__ || [];
     this.currentSlots = {};
     this.lockedArgs = {};
+    this._processStories();
     this._initializeFromURL();
     this._setupPopStateListener();
+    this._initializeTheme();
+  }
+
+  _initializeTheme() {
+    // Load saved theme or use system preference
+    const savedTheme = localStorage.getItem("fablr-theme");
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    }
+  }
+
+  _toggleTheme() {
+    const root = document.documentElement;
+    const currentTheme = root.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+    root.setAttribute("data-theme", newTheme);
+    localStorage.setItem("fablr-theme", newTheme);
+    this.requestUpdate();
+  }
+
+  _getDefaultArgs(componentName) {
+    const componentClass = customElements.get(componentName);
+    if (!componentClass) return {};
+    const instance = new componentClass();
+    const props = componentClass.properties || {};
+    const args = {};
+    for (const key in props) {
+      if (instance[key] !== undefined) {
+        args[key] = instance[key];
+      }
+    }
+    return args;
+  }
+
+  _toTitleCase(str) {
+    return str
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
+  _processStories() {
+    // Auto-merge default args from component with meta args
+    // Auto-generate title from component name if not provided
+    // Auto-extract status from component class
+    this.stories.forEach((story) => {
+      if (story.meta?.component) {
+        const componentClass = customElements.get(story.meta.component);
+        const defaultArgs = this._getDefaultArgs(story.meta.component);
+        story.meta.args = { ...defaultArgs, ...story.meta.args };
+
+        // Auto-generate title from component name if not specified
+        if (!story.meta.title) {
+          story.meta.title = this._toTitleCase(story.meta.component);
+        }
+
+        // Auto-extract status from component class if not specified
+        if (!story.meta.status && componentClass?.status) {
+          story.meta.status = componentClass.status;
+        }
+      }
+    });
   }
 
   connectedCallback() {
@@ -281,6 +350,13 @@ class FablrApp extends LitElement {
       return html`<div id="controls-sidebar">
         <p>No controls available</p>
       </div>`;
+
+    // Get component class to check for enum definitions
+    const componentName = group.meta?.component;
+    const componentClass = componentName
+      ? customElements.get(componentName)
+      : null;
+
     return html`
       <div id="controls-sidebar">
         <h3>Controls</h3>
@@ -288,42 +364,77 @@ class FablrApp extends LitElement {
           ${argKeys.map((k) => {
             const val = this.currentArgs[k];
             const isLocked = this.lockedArgs[k] === true;
-            if (typeof argDefs[k] === "boolean" || typeof val === "boolean") {
+            const argType = group.meta?.argTypes?.[k];
+
+            // Check for enum in component's static properties
+            const propEnum = componentClass?.properties?.[k]?.enum;
+            const enumOptions = propEnum || argType?.options;
+
+            // Select/dropdown control (from argTypes or property enum)
+            if ((argType?.control === "select" || propEnum) && enumOptions) {
               return html`
                 <div class="control">
-                  <label
-                    >${k}${isLocked
-                      ? html` <button
-                          @click=${() => this.unlockArg(k)}
-                          style="font-size: 0.8em; margin-left: 4px;"
-                        >
-                          🔓
-                        </button>`
-                      : ""}<input
-                      type="checkbox"
-                      .checked=${!!val}
-                      ?disabled=${isLocked}
-                      @change=${(e) => this.onArgChange(k, e.target.checked)}
-                  /></label>
+                  ${isLocked
+                    ? html`<fablr-button
+                        variant="secondary"
+                        @click=${() => this.unlockArg(k)}
+                        style="font-size: 0.8em; margin-bottom: 4px;"
+                      >
+                        🔓 Unlock ${k}
+                      </fablr-button>`
+                    : ""}
+                  <fablr-select
+                    label=${k}
+                    .value=${val}
+                    .options=${enumOptions}
+                    ?disabled=${isLocked}
+                    @change=${(e) => this.onArgChange(k, e.detail)}
+                  ></fablr-select>
                 </div>
               `;
             }
+
+            // Boolean checkbox
+            if (typeof argDefs[k] === "boolean" || typeof val === "boolean") {
+              return html`
+                <div class="control">
+                  ${isLocked
+                    ? html`<fablr-button
+                        variant="secondary"
+                        @click=${() => this.unlockArg(k)}
+                        style="font-size: 0.8em; margin-bottom: 4px;"
+                      >
+                        🔓 Unlock ${k}
+                      </fablr-button>`
+                    : ""}
+                  <fablr-checkbox
+                    label=${k}
+                    ?checked=${!!val}
+                    ?disabled=${isLocked}
+                    @change=${(e) => this.onArgChange(k, e.detail)}
+                  ></fablr-checkbox>
+                </div>
+              `;
+            }
+
+            // Text input (default)
             return html`
               <div class="control">
-                <label
-                  >${k}${isLocked
-                    ? html` <button
-                        @click=${() => this.unlockArg(k)}
-                        style="font-size: 0.8em; margin-left: 4px;"
-                      >
-                        🔓
-                      </button>`
-                    : ""}<input
-                    type="text"
-                    .value=${val ?? ""}
-                    ?disabled=${isLocked}
-                    @input=${(e) => this.onArgChange(k, e.target.value)}
-                /></label>
+                ${isLocked
+                  ? html`<fablr-button
+                      variant="secondary"
+                      @click=${() => this.unlockArg(k)}
+                      style="font-size: 0.8em; margin-bottom: 4px;"
+                    >
+                      🔓 Unlock ${k}
+                    </fablr-button>`
+                  : ""}
+                <fablr-input
+                  label=${k}
+                  .value=${val ?? ""}
+                  ?disabled=${isLocked}
+                  @input=${(e) => this.onArgChange(k, e.detail)}
+                ></fablr-input>
               </div>
             `;
           })}
@@ -331,13 +442,12 @@ class FablrApp extends LitElement {
             const val = this.currentSlots[k] ?? slotDefs[k];
             return html`
               <div class="control">
-                <label
-                  >${k}<textarea
-                    .value=${val}
-                    @input=${(e) => this.onSlotChange(k, e.target.value)}
-                    rows="3"
-                  ></textarea>
-                </label>
+                <fablr-textarea
+                  label=${k}
+                  .value=${val}
+                  rows="3"
+                  @input=${(e) => this.onSlotChange(k, e.detail)}
+                ></fablr-textarea>
               </div>
             `;
           })}
@@ -399,8 +509,18 @@ class FablrApp extends LitElement {
   }
 
   renderPreview() {
+    const isDark =
+      document.documentElement.getAttribute("data-theme") === "dark";
+
     if (!this.selected) {
       return html`<div id="preview">
+        <fablr-icon-button
+          class="theme-toggle"
+          aria-label="Toggle theme"
+          @click=${() => this._toggleTheme()}
+        >
+          ${isDark ? "☀️" : "🌙"}
+        </fablr-icon-button>
         <h1>Welcome to Fablr</h1>
         <p>
           No stories found — add components with stories in the components/
@@ -410,13 +530,37 @@ class FablrApp extends LitElement {
     }
     const group = this.stories[this.selected.groupIndex];
     const story = group.stories[this.selected.name];
+    const status = group.meta?.status;
 
     // Support both function and object format
     const storyFn = typeof story === "function" ? story : story.render;
 
+    const statusTooltips = {
+      alpha: "Early development - APIs may change",
+      beta: "Testing phase - Ready for feedback",
+      stable: "Production ready - Stable API",
+      deprecated: "Being phased out - Use alternatives",
+    };
+
     return html`
       <div id="preview">
-        <h3>${group.meta.title} — ${this.selected.name}</h3>
+        <fablr-icon-button
+          class="theme-toggle"
+          aria-label="Toggle theme"
+          @click=${() => this._toggleTheme()}
+        >
+          ${isDark ? "☀️" : "🌙"}
+        </fablr-icon-button>
+        <div class="preview-header">
+          <h3>${group.meta.title} — ${this.selected.name}</h3>
+          ${status
+            ? html`<fablr-badge
+                variant=${status}
+                tooltip="${statusTooltips[status] || status}"
+                >${status}</fablr-badge
+              >`
+            : ""}
+        </div>
         <div class="story-area">
           ${storyFn(this.currentArgs, this.currentSlots)}
         </div>

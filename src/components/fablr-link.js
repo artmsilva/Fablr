@@ -1,6 +1,8 @@
 import { css, html, LitElement } from "lit";
 
 class FablrLink extends LitElement {
+  static status = "stable";
+
   static properties = {
     href: { type: String },
     active: { type: Boolean, reflect: true },
@@ -35,7 +37,7 @@ class FablrLink extends LitElement {
         var(--primary-color) 15%,
         transparent
       );
-      color: color-mix(in srgb, var(--primary-color) 90%, black);
+      color: var(--primary-color);
       font-weight: 600;
     }
   `;
@@ -80,12 +82,8 @@ customElements.define("fablr-link", FablrLink);
 
 // Stories
 const meta = {
-  title: "Fablr Link",
   component: "fablr-link",
-  args: {
-    href: "?story=fablr-button/primary",
-    active: false,
-  },
+  args: { href: "?story=fablr-button/primary" },
   slots: {
     default: "Click me",
   },

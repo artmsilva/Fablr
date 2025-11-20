@@ -1,33 +1,31 @@
 import { css, html, LitElement } from "lit";
 
 class FablrCard extends LitElement {
+  static status = "stable";
+
   static properties = {
     title: { type: String },
   };
 
   static styles = css`
     :host {
-      display: block;
-      --card-bg-color: #fff;
-      --card-border-color: var(--secondary-color);
+      display: inline-grid;
       margin-bottom: var(--space-4);
-    }
-    .card {
-      border: 1px solid var(--card-border-color);
+      border: 1px solid var(--border-color);
       padding: var(--space-4);
       border-radius: var(--space-2);
-      background: var(--card-bg-color);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+      background: var(--bg-primary);
+      box-shadow: 0 1px 2px var(--shadow-color);
       font-family: var(--font-stack);
     }
     .title {
       font-weight: 600;
       margin-bottom: var(--space-2);
       font-size: var(--font-body);
-      color: color-mix(in srgb, var(--secondary-color) 90%, black);
+      color: var(--text-primary);
     }
     .content {
-      color: color-mix(in srgb, var(--secondary-color) 80%, black);
+      color: var(--text-secondary);
       font-size: var(--font-body);
     }
   `;
@@ -39,10 +37,8 @@ class FablrCard extends LitElement {
 
   render() {
     return html`
-      <div class="card">
-        ${this.title ? html`<div class="title">${this.title}</div>` : ""}
-        <div class="content"><slot></slot></div>
-      </div>
+      ${this.title ? html`<div class="title">${this.title}</div>` : ""}
+      <div class="content"><slot></slot></div>
     `;
   }
 }
@@ -51,7 +47,6 @@ customElements.define("fablr-card", FablrCard);
 
 // Stories
 const meta = {
-  title: "Fablr Card",
   component: "fablr-card",
   args: { title: "Card Title" },
   slots: {

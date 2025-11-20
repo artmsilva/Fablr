@@ -6,10 +6,10 @@ Live demo: https://artmsilva.github.io/Fablr/
 
 ## What this repo contains
 
-- **index.html** — app entry with import map for Lit (via esm.sh CDN)
-- **style.css** — base design system styles and CSS variables
-- **app.js** — main Lit app with three-panel layout (sidebar, preview, controls)
-- **components/** — web components with colocated stories
+- **src/index.html** — app entry with import map for Lit (via esm.sh CDN)
+- **src/style.css** — base design system styles and CSS variables
+- **src/app.js** — main Lit app with three-panel layout (sidebar, preview, controls)
+- **src/components/** — web components with colocated stories
   - `fablr-button.js` — button with variant attribute and slot content
   - `fablr-input.js` — input field with label
   - `fablr-card.js` — card container with title and slot
@@ -136,15 +136,15 @@ All commands use `npx @biomejs/biome` so no local installation is needed.
 
 ## Adding New Components
 
-1. Create a new component file in `components/`
+1. Create a new component file in `src/components/`
 2. Define your web component
 3. Add story metadata and stories at the bottom of the same file
-4. Import the component in `app.js`
+4. Import the component in `src/app.js`
 
 Example:
 
 ```javascript
-// components/my-component.js
+// src/components/my-component.js
 import { css, html, LitElement } from "lit";
 
 class MyComponent extends LitElement {
@@ -172,30 +172,6 @@ Then add to `app.js`:
 import "./components/my-component.js";
 ```
 
-## Troubleshooting
-
-- If the site doesn't appear after deployment:
-  - Check Actions → the deploy run logs for errors.
-  - Ensure the repository is public (Pages on public repos is simplest).
-  - Make sure `index.html` is at the published path (root by default).
-- If you see 404s for component files in the browser console, verify the files exist at the same paths used by the imports (components/).
-
-## Project Structure
-
-```
-Fablr/
-├── index.html              # Entry point with import map
-├── style.css              # Design system CSS variables
-├── app.js                 # Main app with story explorer
-├── server.ts              # Dev server with live reload
-├── 404.html               # Custom 404 page
-└── components/            # Web components with colocated stories
-    ├── fablr-button.js
-    ├── fablr-card.js
-    ├── fablr-input.js
-    └── fablr-link.js
-```
-
 ## CDN Configuration
 
 The project uses `esm.sh` for Lit imports instead of jsDelivr to support the full package including directives:
@@ -213,7 +189,4 @@ This enables features like Lit 3's native spread syntax and all directives.
 
 ## Next ideas (optional)
 
-- Add select/dropdown controls for enum-like args
 - Support named slots in controls
-- Add JSDoc extraction for automatic arg documentation
-- Theme switcher for testing components in different modes

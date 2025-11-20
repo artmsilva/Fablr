@@ -15,6 +15,46 @@
 :root {
   --primary-color: #007bff;
   --secondary-color: #6c757d;
+
+  /* light theme colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6c757d;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+
+  color-scheme: light;
+}
+
+/* dark theme */
+:root[data-theme="dark"] {
+  --primary-color: #4dabf7;
+  --secondary-color: #909296;
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --border-color: #404040;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+
+  color-scheme: dark;
+}
+
+/* respect system preference if no manual selection */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --primary-color: #4dabf7;
+    --secondary-color: #909296;
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --border-color: #404040;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+
+    color-scheme: dark;
+  }
 }
 
 /* design tokens */
@@ -54,5 +94,10 @@
 
 body {
   font-family: var(--font-stack);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  /** resets */
   margin: 0;
 }

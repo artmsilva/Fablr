@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "node --experimental-strip-types server.ts",
     "start": "node --experimental-strip-types server.ts",
+    "build": "node --experimental-strip-types build.ts",
+    "preview": "cd dist && python3 -m http.server 8080",
     "check:fix": "npx @biomejs/biome check --write ."
   },
   "keywords": [

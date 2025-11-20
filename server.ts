@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const __filename: string = fileURLToPath(import.meta.url);
 const __dirname: string = path.dirname(__filename);
+const SRC_DIR: string = path.join(__dirname, "src");
 
 const PORT: number = Number(process.env.PORT) || 3000;
 const HOST: string = process.env.HOST || "localhost";
@@ -154,7 +155,7 @@ async function serve404(
   pathname: string,
   method: string
 ): Promise<void> {
-  const notFoundPath = path.join(__dirname, "404.html");
+  const notFoundPath = path.join(SRC_DIR, "404.html");
   const stats = await getFileStat(notFoundPath);
 
   if (stats?.isFile()) {
@@ -246,9 +247,9 @@ const server = http.createServer(
       }
 
       // Resolve and validate path security
-      const filePath = path.resolve(__dirname, pathname);
+      const filePath = path.resolve(SRC_DIR, pathname);
 
-      if (!isPathSafe(filePath, __dirname)) {
+      if (!isPathSafe(filePath, SRC_DIR)) {
         res.writeHead(HTTP_STATUS.BAD_REQUEST, {
           "Content-Type": "text/plain",
         });
@@ -379,7 +380,7 @@ function notifyReload(): void {
  * Setup file watcher for live reload
  */
 function setupFileWatcher(): FSWatcher {
-  const watcher = watch(__dirname, { recursive: true });
+  const watcher = watch(SRC_DIR, { recursive: true });
   let reloadTimeout: NodeJS.Timeout | null = null;
 
   watcher.on("change", (eventType, filename) => {
