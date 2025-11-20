@@ -73,12 +73,6 @@ All arg changes update the URL for shareability. Slot changes are local UI state
 
 This repository is configured to publish via GitHub Pages using the workflow at `.github/workflows/deploy-pages.yml`. The workflow uploads the repository root and deploys it to Pages on every push to the `main` branch.
 
-If you prefer to enable Pages manually instead of using the workflow:
-
-1. Go to the repository → Settings → Pages.
-2. Choose Branch: `main` and Folder: `/ (root)`.
-3. Save.
-
 After the workflow runs or Pages is enabled, the site will be available at:
 `https://artmsilva.github.io/Fablr/`
 
