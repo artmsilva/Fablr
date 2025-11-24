@@ -1,19 +1,19 @@
-# Fablr
+# fable
 
 A lightweight component story viewer built with Lit web components, zero bundlers, and colocated stories.
 
-Live demo: https://artmsilva.github.io/Fablr/
+Live demo: https://artmsilva.github.io/fable/
 
 ## What this repo contains
 
 - **src/index.html** — app entry with import map for Lit (via esm.sh CDN)
 - **src/style.css** — base design system styles and CSS variables
 - **src/app.js** — main Lit app with three-panel layout (sidebar, preview, controls)
-- **src/components/** — web components with colocated stories
-  - `fablr-button.js` — button with variant attribute and slot content
-  - `fablr-input.js` — input field with label
-  - `fablr-card.js` — card container with title and slot
-  - `fablr-link.js` — internal navigation link with active state
+- **src/components/** — web components with colocated stories (prefix-free filenames)
+  - `button.js` — button with variant attribute and slot content
+  - `input.js` — input field with label
+  - `card.js` — card container with title and slot
+  - `link.js` — internal navigation link with active state
 
 ## Architecture
 
@@ -46,8 +46,8 @@ const stories = {
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window.__FABLE_STORIES__ = window.__FABLE_STORIES__ || [];
+window.__FABLE_STORIES__.push({ meta, stories });
 ```
 
 ### Story Controls
@@ -74,7 +74,7 @@ All arg changes update the URL for shareability. Slot changes are local UI state
 This repository is configured to publish via GitHub Pages using the workflow at `.github/workflows/deploy-pages.yml`. The workflow uploads the repository root and deploys it to Pages on every push to the `main` branch.
 
 After the workflow runs or Pages is enabled, the site will be available at:
-`https://artmsilva.github.io/Fablr/`
+`https://artmsilva.github.io/fable/`
 
 ## Local development
 
@@ -162,8 +162,8 @@ const meta = {
 const stories = {
   Default: (args) => html`<my-component text=${args.text}></my-component>`,
 };
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window.__FABLE_STORIES__ = window.__FABLE_STORIES__ || [];
+window.__FABLE_STORIES__.push({ meta, stories });
 ```
 
 Then add to `app.js`:
@@ -186,6 +186,22 @@ The project uses `esm.sh` for Lit imports instead of jsDelivr to support the ful
 ```
 
 This enables features like Lit 3's native spread syntax and all directives.
+
+## Renaming the Project
+
+This project is designed for easy renaming. See [RENAME_GUIDE.md](RENAME_GUIDE.md) for detailed instructions.
+
+**Quick rename:**
+
+```bash
+./rename-project.sh yournewname
+```
+
+The project uses a centralized config file (`src/config.js`) that automatically handles:
+
+- Global stories registry
+- Theme storage keys
+- Component registrations
 
 ## Next ideas (optional)
 

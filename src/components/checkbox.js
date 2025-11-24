@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrCheckbox extends LitElement {
+class FableCheckbox extends LitElement {
   static status = "beta";
 
   static properties = {
@@ -72,11 +73,11 @@ class FablrCheckbox extends LitElement {
   }
 }
 
-customElements.define("fablr-checkbox", FablrCheckbox);
+customElements.define("fable-checkbox", FableCheckbox);
 
 // Stories
 const meta = {
-  component: "fablr-checkbox",
+  component: "fable-checkbox",
   args: {
     label: "Accept terms",
     checked: false,
@@ -85,31 +86,31 @@ const meta = {
 
 const stories = {
   Default: (args) =>
-    html`<fablr-checkbox
+    html`<fable-checkbox
       label=${args.label}
       ?checked=${args.checked}
       ?disabled=${args.disabled}
-    ></fablr-checkbox>`,
+    ></fable-checkbox>`,
   Checked: {
     args: (baseArgs) => ({ ...baseArgs, checked: true }),
     render: (args) =>
-      html`<fablr-checkbox
+      html`<fable-checkbox
         label=${args.label}
         ?checked=${args.checked}
         ?disabled=${args.disabled}
-      ></fablr-checkbox>`,
+      ></fable-checkbox>`,
   },
   Disabled: {
     args: (baseArgs) => ({ ...baseArgs, disabled: true }),
     lockedArgs: { disabled: true },
     render: (args) =>
-      html`<fablr-checkbox
+      html`<fable-checkbox
         label=${args.label}
         ?checked=${args.checked}
         ?disabled=${args.disabled}
-      ></fablr-checkbox>`,
+      ></fable-checkbox>`,
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

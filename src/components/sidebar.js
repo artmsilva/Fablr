@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrSidebar extends LitElement {
+class FableSidebar extends LitElement {
   static status = "stable";
 
   static properties = {
@@ -31,12 +32,12 @@ class FablrSidebar extends LitElement {
   }
 }
 
-customElements.define("fablr-sidebar", FablrSidebar);
+customElements.define("fable-sidebar", FableSidebar);
 
 // Stories
 const meta = {
   title: "Sidebar",
-  component: "fablr-sidebar",
+  component: "fable-sidebar",
   args: {
     position: "left",
   },
@@ -53,18 +54,18 @@ const stories = {
     <div
       style="display: flex; height: 400px; border: 1px solid var(--border-color);"
     >
-      <fablr-sidebar position=${args.position}>
+      <fable-sidebar position=${args.position}>
         <h3>Sidebar Content</h3>
-        <fablr-nav-group title="Navigation">
-          <fablr-link>Home</fablr-link>
-          <fablr-link active>Dashboard</fablr-link>
-          <fablr-link>Settings</fablr-link>
-        </fablr-nav-group>
-        <fablr-nav-group title="Reports">
-          <fablr-link>Analytics</fablr-link>
-          <fablr-link>Sales</fablr-link>
-        </fablr-nav-group>
-      </fablr-sidebar>
+        <fable-nav-group title="Navigation">
+          <fable-link>Home</fable-link>
+          <fable-link active>Dashboard</fable-link>
+          <fable-link>Settings</fable-link>
+        </fable-nav-group>
+        <fable-nav-group title="Reports">
+          <fable-link>Analytics</fable-link>
+          <fable-link>Sales</fable-link>
+        </fable-nav-group>
+      </fable-sidebar>
       <div style="flex: 1; padding: 20px; background: var(--bg-primary);">
         <p>Main content area</p>
       </div>
@@ -77,33 +78,33 @@ const stories = {
       <div style="flex: 1; padding: 20px; background: var(--bg-primary);">
         <p>Main content area</p>
       </div>
-      <fablr-sidebar position="right">
+      <fable-sidebar position="right">
         <h3>Controls</h3>
-        <fablr-stack gap="var(--space-4)">
-          <fablr-input label="Name" value="John Doe"></fablr-input>
-          <fablr-checkbox label="Active" checked></fablr-checkbox>
-          <fablr-button variant="primary">Save</fablr-button>
-        </fablr-stack>
-      </fablr-sidebar>
+        <fable-stack gap="var(--space-4)">
+          <fable-input label="Name" value="John Doe"></fable-input>
+          <fable-checkbox label="Active" checked></fable-checkbox>
+          <fable-button variant="primary">Save</fable-button>
+        </fable-stack>
+      </fable-sidebar>
     </div>
   `,
   "With Nav Groups": (args) => html`
     <div
       style="display: flex; height: 400px; border: 1px solid var(--border-color);"
     >
-      <fablr-sidebar position=${args.position}>
+      <fable-sidebar position=${args.position}>
         <h2 style="margin-top: 0;">Documentation</h2>
-        <fablr-nav-group title="Getting Started">
-          <fablr-link>Introduction</fablr-link>
-          <fablr-link>Installation</fablr-link>
-          <fablr-link>Quick Start</fablr-link>
-        </fablr-nav-group>
-        <fablr-nav-group title="Components">
-          <fablr-link>Button</fablr-link>
-          <fablr-link>Input</fablr-link>
-          <fablr-link>Card</fablr-link>
-        </fablr-nav-group>
-      </fablr-sidebar>
+        <fable-nav-group title="Getting Started">
+          <fable-link>Introduction</fable-link>
+          <fable-link>Installation</fable-link>
+          <fable-link>Quick Start</fable-link>
+        </fable-nav-group>
+        <fable-nav-group title="Components">
+          <fable-link>Button</fable-link>
+          <fable-link>Input</fable-link>
+          <fable-link>Card</fable-link>
+        </fable-nav-group>
+      </fable-sidebar>
       <div style="flex: 1; padding: 20px; background: var(--bg-primary);">
         <p>Documentation content</p>
       </div>
@@ -111,5 +112,5 @@ const stories = {
   `,
 };
 
-if (!window.__FABLR_STORIES__) window.__FABLR_STORIES__ = [];
-window.__FABLR_STORIES__.push({ meta, stories });
+if (!window[STORIES_KEY]) window[STORIES_KEY] = [];
+window[STORIES_KEY].push({ meta, stories });

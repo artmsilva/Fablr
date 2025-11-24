@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrSelectOption extends HTMLElement {
+class FableSelectOption extends HTMLElement {
   static get observedAttributes() {
     return ["value", "label"];
   }
@@ -27,9 +28,9 @@ class FablrSelectOption extends HTMLElement {
   }
 }
 
-customElements.define("fablr-select-option", FablrSelectOption);
+customElements.define("fable-select-option", FableSelectOption);
 
-class FablrSelect extends LitElement {
+class FableSelect extends LitElement {
   static status = "beta";
 
   static properties = {
@@ -94,7 +95,7 @@ class FablrSelect extends LitElement {
   _updateOptions() {
     // Use requestAnimationFrame to ensure slot content is fully rendered
     requestAnimationFrame(() => {
-      const options = Array.from(this.querySelectorAll("fablr-select-option"));
+      const options = Array.from(this.querySelectorAll("fable-select-option"));
       this._options = options.map((opt) => ({
         value: opt.value || "",
         label: opt.label || opt.textContent?.trim() || "",
@@ -135,11 +136,11 @@ class FablrSelect extends LitElement {
   }
 }
 
-customElements.define("fablr-select", FablrSelect);
+customElements.define("fable-select", FableSelect);
 
 // Stories
 const meta = {
-  component: "fablr-select",
+  component: "fable-select",
   args: {
     label: "Choose option",
     value: "option2",
@@ -152,52 +153,52 @@ const meta = {
   },
   slots: {
     default: html`
-      <fablr-select-option value="option1">Option 1</fablr-select-option>
-      <fablr-select-option value="option2">Option 2</fablr-select-option>
-      <fablr-select-option value="option3">Option 3</fablr-select-option>
+      <fable-select-option value="option1">Option 1</fable-select-option>
+      <fable-select-option value="option2">Option 2</fable-select-option>
+      <fable-select-option value="option3">Option 3</fable-select-option>
     `,
   },
 };
 
 const stories = {
   Default: (args, slots) =>
-    html`<fablr-select
+    html`<fable-select
       label=${args.label}
       .value=${args.value}
       ?disabled=${args.disabled}
     >
       ${slots?.default}
-    </fablr-select>`,
+    </fable-select>`,
   "With Countries": (args) =>
-    html`<fablr-select label="Select Country" value="us">
-      <fablr-select-option value="us">United States</fablr-select-option>
-      <fablr-select-option value="uk">United Kingdom</fablr-select-option>
-      <fablr-select-option value="ca">Canada</fablr-select-option>
-      <fablr-select-option value="au">Australia</fablr-select-option>
-      <fablr-select-option value="de">Germany</fablr-select-option>
-    </fablr-select>`,
+    html`<fable-select label="Select Country" value="us">
+      <fable-select-option value="us">United States</fable-select-option>
+      <fable-select-option value="uk">United Kingdom</fable-select-option>
+      <fable-select-option value="ca">Canada</fable-select-option>
+      <fable-select-option value="au">Australia</fable-select-option>
+      <fable-select-option value="de">Germany</fable-select-option>
+    </fable-select>`,
   "Many Options": (args) =>
-    html`<fablr-select label="Choose Framework" value="react">
-      <fablr-select-option value="react">React</fablr-select-option>
-      <fablr-select-option value="vue">Vue</fablr-select-option>
-      <fablr-select-option value="angular">Angular</fablr-select-option>
-      <fablr-select-option value="svelte">Svelte</fablr-select-option>
-      <fablr-select-option value="solid">Solid</fablr-select-option>
-      <fablr-select-option value="lit">Lit</fablr-select-option>
-    </fablr-select>`,
+    html`<fable-select label="Choose Framework" value="react">
+      <fable-select-option value="react">React</fable-select-option>
+      <fable-select-option value="vue">Vue</fable-select-option>
+      <fable-select-option value="angular">Angular</fable-select-option>
+      <fable-select-option value="svelte">Svelte</fable-select-option>
+      <fable-select-option value="solid">Solid</fable-select-option>
+      <fable-select-option value="lit">Lit</fable-select-option>
+    </fable-select>`,
   Disabled: {
     args: (baseArgs) => ({ ...baseArgs, disabled: true }),
     lockedArgs: { disabled: true },
     render: (args, slots) =>
-      html`<fablr-select
+      html`<fable-select
         label=${args.label}
         .value=${args.value}
         ?disabled=${args.disabled}
       >
         ${slots?.default}
-      </fablr-select>`,
+      </fable-select>`,
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

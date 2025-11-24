@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrLink extends LitElement {
+class FableLink extends LitElement {
   static status = "stable";
 
   static properties = {
@@ -78,12 +79,12 @@ class FablrLink extends LitElement {
   }
 }
 
-customElements.define("fablr-link", FablrLink);
+customElements.define("fable-link", FableLink);
 
 // Stories
 const meta = {
-  component: "fablr-link",
-  args: { href: "?story=fablr-button/primary" },
+  component: "fable-link",
+  args: { href: "?story=fable-button/primary" },
   slots: {
     default: "Click me",
   },
@@ -91,18 +92,18 @@ const meta = {
 
 const stories = {
   Default: (args, slots) =>
-    html`<fablr-link href=${args.href} ?active=${args.active}
-      >${slots?.default ?? "Click me"}</fablr-link
+    html`<fable-link href=${args.href} ?active=${args.active}
+      >${slots?.default ?? "Click me"}</fable-link
     >`,
   Active: {
     args: (args) => ({ ...args, active: true }),
     lockedArgs: { active: true },
     render: (args, slots) =>
-      html`<fablr-link href=${args.href} ?active=${args.active}
-        >${slots?.default ?? "Active Link"}</fablr-link
+      html`<fable-link href=${args.href} ?active=${args.active}
+        >${slots?.default ?? "Active Link"}</fable-link
       >`,
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

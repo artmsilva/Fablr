@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrBadge extends LitElement {
+class FableBadge extends LitElement {
   static status = "stable";
 
   static properties = {
@@ -104,11 +105,11 @@ class FablrBadge extends LitElement {
   }
 }
 
-customElements.define("fablr-badge", FablrBadge);
+customElements.define("fable-badge", FableBadge);
 
 // Stories
 const meta = {
-  component: "fablr-badge",
+  component: "fable-badge",
   args: {
     variant: "stable",
     size: "default",
@@ -134,11 +135,11 @@ const stories = {
     }),
     lockedArgs: { variant: true },
     render: (args, slots) =>
-      html`<fablr-badge
+      html`<fable-badge
         variant=${args.variant}
         size=${args.size}
         tooltip=${args.tooltip}
-        >${slots?.default ?? "alpha"}</fablr-badge
+        >${slots?.default ?? "alpha"}</fable-badge
       >`,
   },
   Beta: {
@@ -149,11 +150,11 @@ const stories = {
     }),
     lockedArgs: { variant: true },
     render: (args, slots) =>
-      html`<fablr-badge
+      html`<fable-badge
         variant=${args.variant}
         size=${args.size}
         tooltip=${args.tooltip}
-        >${slots?.default ?? "beta"}</fablr-badge
+        >${slots?.default ?? "beta"}</fable-badge
       >`,
   },
   Stable: {
@@ -164,11 +165,11 @@ const stories = {
     }),
     lockedArgs: { variant: true },
     render: (args, slots) =>
-      html`<fablr-badge
+      html`<fable-badge
         variant=${args.variant}
         size=${args.size}
         tooltip=${args.tooltip}
-        >${slots?.default ?? "stable"}</fablr-badge
+        >${slots?.default ?? "stable"}</fable-badge
       >`,
   },
   Deprecated: {
@@ -179,11 +180,11 @@ const stories = {
     }),
     lockedArgs: { variant: true },
     render: (args, slots) =>
-      html`<fablr-badge
+      html`<fable-badge
         variant=${args.variant}
         size=${args.size}
         tooltip=${args.tooltip}
-        >${slots?.default ?? "deprecated"}</fablr-badge
+        >${slots?.default ?? "deprecated"}</fable-badge
       >`,
   },
   Info: {
@@ -194,11 +195,11 @@ const stories = {
     }),
     lockedArgs: { variant: true },
     render: (args, slots) =>
-      html`<fablr-badge
+      html`<fable-badge
         variant=${args.variant}
         size=${args.size}
         tooltip=${args.tooltip}
-        >${slots?.default ?? "info"}</fablr-badge
+        >${slots?.default ?? "info"}</fable-badge
       >`,
   },
   Condensed: {
@@ -210,17 +211,17 @@ const stories = {
     render: (args, slots) =>
       html`
         <div style="display: flex; gap: 8px; align-items: center;">
-          <fablr-badge variant="alpha" size="condensed">alpha</fablr-badge>
-          <fablr-badge variant="beta" size="condensed">beta</fablr-badge>
-          <fablr-badge variant="stable" size="condensed">stable</fablr-badge>
-          <fablr-badge variant="deprecated" size="condensed"
-            >deprecated</fablr-badge
+          <fable-badge variant="alpha" size="condensed">alpha</fable-badge>
+          <fable-badge variant="beta" size="condensed">beta</fable-badge>
+          <fable-badge variant="stable" size="condensed">stable</fable-badge>
+          <fable-badge variant="deprecated" size="condensed"
+            >deprecated</fable-badge
           >
-          <fablr-badge variant="info" size="condensed">info</fablr-badge>
+          <fable-badge variant="info" size="condensed">info</fable-badge>
         </div>
       `,
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrInput extends LitElement {
+class FableInput extends LitElement {
   static status = "beta";
 
   static properties = {
@@ -63,21 +64,21 @@ class FablrInput extends LitElement {
   }
 }
 
-customElements.define("fablr-input", FablrInput);
+customElements.define("fable-input", FableInput);
 
 // Stories
 const meta = {
-  component: "fablr-input",
+  component: "fable-input",
   args: { label: "Name", placeholder: "Enter name" },
 };
 const stories = {
   Default: (args) =>
-    html`<fablr-input
+    html`<fable-input
       label=${args.label}
       placeholder=${args.placeholder}
       .value=${args.value}
-    ></fablr-input>`,
+    ></fable-input>`,
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

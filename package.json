@@ -1,5 +1,5 @@
 {
-  "name": "fablr",
+  "name": "fable",
   "version": "0.0.0",
   "description": "A simple component story explorer built with Lit",
   "type": "module",

@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrCard extends LitElement {
+class FableCard extends LitElement {
   static status = "stable";
 
   static properties = {
@@ -43,11 +44,11 @@ class FablrCard extends LitElement {
   }
 }
 
-customElements.define("fablr-card", FablrCard);
+customElements.define("fable-card", FableCard);
 
 // Stories
 const meta = {
-  component: "fablr-card",
+  component: "fable-card",
   args: { title: "Card Title" },
   slots: {
     default: "This is a card content.",
@@ -55,10 +56,10 @@ const meta = {
 };
 const stories = {
   Default: (args, slots) =>
-    html`<fablr-card title=${args.title}
-      >${slots?.default ?? "This is a card content."}</fablr-card
+    html`<fable-card title=${args.title}
+      >${slots?.default ?? "This is a card content."}</fable-card
     >`,
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

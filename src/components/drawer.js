@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrDrawer extends LitElement {
+class FableDrawer extends LitElement {
   static status = "stable";
 
   static properties = {
@@ -211,12 +212,12 @@ class FablrDrawer extends LitElement {
   }
 }
 
-customElements.define("fablr-drawer", FablrDrawer);
+customElements.define("fable-drawer", FableDrawer);
 
 // Stories
 const meta = {
   title: "Drawer",
-  component: "fablr-drawer",
+  component: "fable-drawer",
   args: {
     open: false,
     position: "right",
@@ -232,53 +233,53 @@ const meta = {
 
 const stories = {
   Default: (args) => html`
-    <fablr-button
+    <fable-button
       @click=${(e) => {
         const drawer = e.target.nextElementSibling;
         drawer.open = true;
       }}
     >
       Open Drawer
-    </fablr-button>
-    <fablr-drawer
+    </fable-button>
+    <fable-drawer
       .open=${args.open}
       position=${args.position}
       width=${args.width}
     >
       <div slot="title">Example Drawer</div>
       <p>This is the drawer content. You can put any content here.</p>
-      <fablr-stack gap="var(--space-3)">
-        <fablr-input label="Name" value="John Doe"></fablr-input>
-        <fablr-textarea label="Description" rows="4"></fablr-textarea>
-        <fablr-button variant="primary">Save</fablr-button>
-      </fablr-stack>
-    </fablr-drawer>
+      <fable-stack gap="var(--space-3)">
+        <fable-input label="Name" value="John Doe"></fable-input>
+        <fable-textarea label="Description" rows="4"></fable-textarea>
+        <fable-button variant="primary">Save</fable-button>
+      </fable-stack>
+    </fable-drawer>
   `,
   "Bottom Position": (args) => html`
-    <fablr-button
+    <fable-button
       @click=${(e) => {
         const drawer = e.target.nextElementSibling;
         drawer.open = true;
       }}
     >
       Open Bottom Drawer
-    </fablr-button>
-    <fablr-drawer open position="bottom" width="300px">
+    </fable-button>
+    <fable-drawer open position="bottom" width="300px">
       <div slot="title">Bottom Sheet</div>
       <p>This drawer slides up from the bottom of the screen.</p>
-      <fablr-button variant="primary">Action</fablr-button>
-    </fablr-drawer>
+      <fable-button variant="primary">Action</fable-button>
+    </fable-drawer>
   `,
   "With Code": (args) => html`
-    <fablr-button
+    <fable-button
       @click=${(e) => {
         const drawer = e.target.nextElementSibling;
         drawer.open = true;
       }}
     >
       View Source
-    </fablr-button>
-    <fablr-drawer position="right" width="600px">
+    </fable-button>
+    <fable-drawer position="right" width="600px">
       <div slot="title">Source Code</div>
       <pre
         style="background: var(--bg-primary); padding: var(--space-3); border-radius: var(--radius); overflow-x: auto;"
@@ -286,9 +287,9 @@ const stories = {
   console.log('Hello, World!');
   return 42;
 };</code></pre>
-    </fablr-drawer>
+    </fable-drawer>
   `,
 };
 
-if (!window.__FABLR_STORIES__) window.__FABLR_STORIES__ = [];
-window.__FABLR_STORIES__.push({ meta, stories });
+if (!window[STORIES_KEY]) window[STORIES_KEY] = [];
+window[STORIES_KEY].push({ meta, stories });

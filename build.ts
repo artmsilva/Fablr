@@ -197,7 +197,7 @@ async function createManifest(
  * Main build function
  */
 async function build(): Promise<void> {
-  console.log("🔨 Building Fablr for production...\n");
+  console.log("🔨 Building fable for production...\n");
 
   try {
     // Setup

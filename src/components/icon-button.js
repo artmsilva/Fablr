@@ -1,7 +1,8 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
-class FablrIconButton extends LitElement {
+class FableIconButton extends LitElement {
   static status = "beta";
 
   static properties = {
@@ -62,11 +63,11 @@ class FablrIconButton extends LitElement {
   }
 }
 
-customElements.define("fablr-icon-button", FablrIconButton);
+customElements.define("fable-icon-button", FableIconButton);
 
 // Stories
 const meta = {
-  component: "fablr-icon-button",
+  component: "fable-icon-button",
   args: {
     ariaLabel: "Icon button",
   },
@@ -77,31 +78,31 @@ const meta = {
 
 const stories = {
   Default: (args, slots) =>
-    html`<fablr-icon-button
+    html`<fable-icon-button
       ?disabled=${args.disabled}
       aria-label=${args.ariaLabel}
-      >${slots?.default ?? "🌙"}</fablr-icon-button
+      >${slots?.default ?? "🌙"}</fable-icon-button
     >`,
   ThemeToggle: {
     args: (baseArgs) => ({ ...baseArgs, ariaLabel: "Toggle theme" }),
     render: (args, slots) =>
-      html`<fablr-icon-button
+      html`<fable-icon-button
         ?disabled=${args.disabled}
         aria-label=${args.ariaLabel}
-        >${slots?.default ?? "☀️"}</fablr-icon-button
+        >${slots?.default ?? "☀️"}</fable-icon-button
       >`,
   },
   Disabled: {
     args: (baseArgs) => ({ ...baseArgs, disabled: true }),
     lockedArgs: { disabled: true },
     render: (args, slots) =>
-      html`<fablr-icon-button
+      html`<fable-icon-button
         ?disabled=${args.disabled}
         aria-label=${args.ariaLabel}
-        >${slots?.default ?? "🔒"}</fablr-icon-button
+        >${slots?.default ?? "🔒"}</fable-icon-button
       >`,
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

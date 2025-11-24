@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrTextarea extends LitElement {
+class FableTextarea extends LitElement {
   static status = "beta";
 
   static properties = {
@@ -68,11 +69,11 @@ class FablrTextarea extends LitElement {
   }
 }
 
-customElements.define("fablr-textarea", FablrTextarea);
+customElements.define("fable-textarea", FableTextarea);
 
 // Stories
 const meta = {
-  component: "fablr-textarea",
+  component: "fable-textarea",
   args: {
     label: "Description",
     placeholder: "Enter description",
@@ -82,40 +83,40 @@ const meta = {
 
 const stories = {
   Default: (args) =>
-    html`<fablr-textarea
+    html`<fable-textarea
       label=${args.label}
       placeholder=${args.placeholder}
       .value=${args.value}
       rows=${args.rows}
       ?disabled=${args.disabled}
-    ></fablr-textarea>`,
+    ></fable-textarea>`,
   WithContent: {
     args: (baseArgs) => ({
       ...baseArgs,
       value: "This is some example content\nthat spans multiple lines.",
     }),
     render: (args) =>
-      html`<fablr-textarea
+      html`<fable-textarea
         label=${args.label}
         placeholder=${args.placeholder}
         .value=${args.value}
         rows=${args.rows}
         ?disabled=${args.disabled}
-      ></fablr-textarea>`,
+      ></fable-textarea>`,
   },
   Disabled: {
     args: (baseArgs) => ({ ...baseArgs, disabled: true }),
     lockedArgs: { disabled: true },
     render: (args) =>
-      html`<fablr-textarea
+      html`<fable-textarea
         label=${args.label}
         placeholder=${args.placeholder}
         .value=${args.value}
         rows=${args.rows}
         ?disabled=${args.disabled}
-      ></fablr-textarea>`,
+      ></fable-textarea>`,
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

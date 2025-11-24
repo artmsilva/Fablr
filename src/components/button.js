@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrButton extends LitElement {
+class FableButton extends LitElement {
   static status = "alpha";
 
   static properties = {
@@ -77,43 +78,43 @@ class FablrButton extends LitElement {
   }
 }
 
-customElements.define("fablr-button", FablrButton);
+customElements.define("fable-button", FableButton);
 
 /**
- * Meta information for Fablr Button component
+ * Meta information for fable Button component
  */
 const meta = {
-  component: "fablr-button",
+  component: "fable-button",
   slots: {
     default: "Primary Button",
   },
 };
 
 /**
- * Stories for Fablr Button component
+ * Stories for fable Button component
  */
 const stories = {
   Primary: (args, slots) =>
-    html`<fablr-button ?disabled=${args.disabled} variant=${args.variant}
-      >${slots?.default ?? "Primary Button"}</fablr-button
+    html`<fable-button ?disabled=${args.disabled} variant=${args.variant}
+      >${slots?.default ?? "Primary Button"}</fable-button
     >`,
   Disabled: {
     args: (baseArgs) => ({ ...baseArgs, disabled: true }),
     lockedArgs: { disabled: true },
     render: (args, slots) =>
-      html`<fablr-button ?disabled=${args.disabled} variant="primary"
-        >${slots?.default ?? "Disabled Button"}</fablr-button
+      html`<fable-button ?disabled=${args.disabled} variant="primary"
+        >${slots?.default ?? "Disabled Button"}</fable-button
       >`,
   },
   Secondary: {
     args: (baseArgs) => ({ ...baseArgs, variant: "secondary" }),
     lockedArgs: { variant: true },
     render: (args, slots) =>
-      html`<fablr-button ?disabled=${args.disabled} variant=${args.variant}
-        >${slots?.default ?? "Secondary Button"}</fablr-button
+      html`<fable-button ?disabled=${args.disabled} variant=${args.variant}
+        >${slots?.default ?? "Secondary Button"}</fable-button
       >`,
   },
 };
 
-window.__FABLR_STORIES__ = window.__FABLR_STORIES__ || [];
-window.__FABLR_STORIES__.push({ meta, stories });
+window[STORIES_KEY] = window[STORIES_KEY] || [];
+window[STORIES_KEY].push({ meta, stories });

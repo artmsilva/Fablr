@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrPreview extends LitElement {
+class FablePreview extends LitElement {
   static status = "stable";
 
   static properties = {};
@@ -14,7 +15,7 @@ class FablrPreview extends LitElement {
       padding: 0;
       height: calc(
         100vh - 100px
-      ); /** fablr-header height implemention in app */
+      ); /** fable-header height implemention in app */
       background-color: var(--bg-primary);
       position: relative;
     }
@@ -25,26 +26,26 @@ class FablrPreview extends LitElement {
   }
 }
 
-customElements.define("fablr-preview", FablrPreview);
+customElements.define("fable-preview", FablePreview);
 
 // Stories
 const meta = {
   title: "Preview",
-  component: "fablr-preview",
+  component: "fable-preview",
   args: {},
 };
 
 const stories = {
   Default: (args) => html`
     <div>
-      <fablr-preview>
+      <fable-preview>
         <h1>Preview Area</h1>
         <p>This is where component stories are displayed.</p>
-        <fablr-button variant="primary">Example Button</fablr-button>
-      </fablr-preview>
+        <fable-button variant="primary">Example Button</fable-button>
+      </fable-preview>
     </div>
   `,
 };
 
-if (!window.__FABLR_STORIES__) window.__FABLR_STORIES__ = [];
-window.__FABLR_STORIES__.push({ meta, stories });
+if (!window[STORIES_KEY]) window[STORIES_KEY] = [];
+window[STORIES_KEY].push({ meta, stories });

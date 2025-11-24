@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
+import { STORIES_KEY } from "../config.js";
 
-class FablrNavGroup extends LitElement {
+class FableNavGroup extends LitElement {
   static status = "stable";
 
   static properties = {
@@ -49,12 +50,12 @@ class FablrNavGroup extends LitElement {
   }
 }
 
-customElements.define("fablr-nav-group", FablrNavGroup);
+customElements.define("fable-nav-group", FableNavGroup);
 
 // Stories
 const meta = {
   title: "Nav Group",
-  component: "fablr-nav-group",
+  component: "fable-nav-group",
   args: {
     title: "Components",
   },
@@ -62,35 +63,35 @@ const meta = {
 
 const stories = {
   Default: (args) => html`
-    <fablr-nav-group title=${args.title}>
-      <fablr-link>Button</fablr-link>
-      <fablr-link active>Input</fablr-link>
-      <fablr-link>Card</fablr-link>
-      <fablr-link>Select</fablr-link>
-    </fablr-nav-group>
+    <fable-nav-group title=${args.title}>
+      <fable-link>Button</fable-link>
+      <fable-link active>Input</fable-link>
+      <fable-link>Card</fable-link>
+      <fable-link>Select</fable-link>
+    </fable-nav-group>
   `,
   "Without Title": (args) => html`
-    <fablr-nav-group>
-      <fablr-link>Home</fablr-link>
-      <fablr-link>About</fablr-link>
-      <fablr-link>Contact</fablr-link>
-    </fablr-nav-group>
+    <fable-nav-group>
+      <fable-link>Home</fable-link>
+      <fable-link>About</fable-link>
+      <fable-link>Contact</fable-link>
+    </fable-nav-group>
   `,
   "Multiple Groups": (args) => html`
     <div style="display: flex; flex-direction: column; gap: 8px;">
-      <fablr-nav-group title="Forms">
-        <fablr-link>Button</fablr-link>
-        <fablr-link>Input</fablr-link>
-        <fablr-link>Checkbox</fablr-link>
-      </fablr-nav-group>
-      <fablr-nav-group title="Layout">
-        <fablr-link>Card</fablr-link>
-        <fablr-link>Stack</fablr-link>
-        <fablr-link>Sidebar</fablr-link>
-      </fablr-nav-group>
+      <fable-nav-group title="Forms">
+        <fable-link>Button</fable-link>
+        <fable-link>Input</fable-link>
+        <fable-link>Checkbox</fable-link>
+      </fable-nav-group>
+      <fable-nav-group title="Layout">
+        <fable-link>Card</fable-link>
+        <fable-link>Stack</fable-link>
+        <fable-link>Sidebar</fable-link>
+      </fable-nav-group>
     </div>
   `,
 };
 
-if (!window.__FABLR_STORIES__) window.__FABLR_STORIES__ = [];
-window.__FABLR_STORIES__.push({ meta, stories });
+if (!window[STORIES_KEY]) window[STORIES_KEY] = [];
+window[STORIES_KEY].push({ meta, stories });
