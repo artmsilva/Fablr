@@ -53,7 +53,7 @@ async function setupDistDirectory(): Promise<void> {
  * Copy static assets that don't need fingerprinting
  */
 async function copyStaticAssets(): Promise<void> {
-  const staticFiles = ["404.html", "favicon.svg"];
+  const staticFiles = ["404.html", "favicon.svg", "config.js"];
 
   for (const file of staticFiles) {
     const src = path.join(SRC_DIR, file);
