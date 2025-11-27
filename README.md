@@ -203,6 +203,15 @@ The project uses a centralized config file (`src/config.js`) that automatically 
 - Theme storage keys
 - Component registrations
 
-## Next ideas (optional)
+## Next ideas
 
 - Support named slots in controls
+- Permutations - render stories with various permutations
+- Docs story
+- Homepage/discovery page
+- Search and taxonomy support
+- Hot module reload
+- Better URL router using URLPattern
+- Playground support, ability to compose new patterns and templates to share
+- Design tokens support (docs and stories)
+- Icons docs
