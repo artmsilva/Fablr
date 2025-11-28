@@ -115,7 +115,7 @@
 ## Cross-Cutting Considerations
 
 - **Shared Metadata Schema (ADR 0001)**: Adopt the schema defined in `docs/decisions/0001-shared-metadata-schema.md`, covering component stories, docs entries, tokens, and icons. All features consume the centralized registry, and dev-time validation (JSON Schema + TypeScript types) ensures required fields (`id`, `title`, taxonomy info, timestamps, permutations config) are always present.
-- **Persistence & Backward Compatibility**: Update URL/localStorage formats with versioning; support legacy links via redirects.
+- **Persistence (Greenfield)**: Manage URL/localStorage formats for the current iteration only—breaking older links/schemas is acceptable per ADR 0002, but document material changes.
 - **Performance**: Virtualization for large grids (permutations, icons). Debounce search queries.
 - **Accessibility**: Keyboard/focus management, semantic headings for new views (home, docs, playroom).
 - **Rollout Strategy**: Phase delivery—foundation (schema/router), discovery/search, rich stories (permutations/docs), primitives (tokens/icons), then Playroom.

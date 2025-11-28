@@ -45,9 +45,10 @@ Welcome to Fable. This guide orients autonomous/LLM-based assistants so they can
 
 1. **Read Existing Changes**: Worktree may contain user edits; never revert unrelated modifications.
 2. **Respect Zero-Bundler**: Avoid adding webpack/vite etc. Use native imports/CDN for dependencies.
-3. **Docs First**: Update specs/ADRs alongside code when introducing new behaviors.
-4. **Testing**: Document what was tested. If unable to run tests, explain why.
-5. **Files to Avoid**: Do not edit `dist/` directly; it is generated.
+3. **Greenfield Mindset**: ADR 0002 establishes that we ignore legacy/backward compatibility. Feel free to break old URLs/meta schemas—just keep current code working and document changes.
+4. **Docs First**: Update specs/ADRs alongside code when introducing new behaviors.
+5. **Testing**: Document what was tested. If unable to run tests, explain why.
+6. **Files to Avoid**: Do not edit `dist/` directly; it is generated.
 
 ## Architecture Highlights
 
