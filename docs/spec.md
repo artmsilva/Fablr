@@ -114,7 +114,7 @@
 
 ## Cross-Cutting Considerations
 
-- **Metadata Schema**: Define TypeScript types + runtime validation so new fields (`tags`, `permutations`, `type`) are enforced.
+- **Shared Metadata Schema (ADR 0001)**: Adopt the schema defined in `docs/decisions/0001-shared-metadata-schema.md`, covering component stories, docs entries, tokens, and icons. All features consume the centralized registry, and dev-time validation (JSON Schema + TypeScript types) ensures required fields (`id`, `title`, taxonomy info, timestamps, permutations config) are always present.
 - **Persistence & Backward Compatibility**: Update URL/localStorage formats with versioning; support legacy links via redirects.
 - **Performance**: Virtualization for large grids (permutations, icons). Debounce search queries.
 - **Accessibility**: Keyboard/focus management, semantic headings for new views (home, docs, playroom).
