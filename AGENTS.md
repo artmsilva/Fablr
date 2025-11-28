@@ -63,6 +63,12 @@ Welcome to Fable. This guide orients autonomous/LLM-based assistants so they can
 - Shared metadata schema ADR: `docs/decisions/0001-shared-metadata-schema.md`.
 - Use these docs to understand dependencies before coding.
 
+## Progress Tracking
+
+- Every user thread must have a log under `ops/threads/` that follows `docs/agents/progress-tracking.md`.
+- Copy `ops/threads/TEMPLATE.md` when kicking off a new effort and register it inside `ops/threads/README.md`.
+- Update the timeline/status fields whenever you push code, hit a blocker, or hand off to another agent.
+
 ## Communication Etiquette
 
 - When uncertain, ask clarifying questions referencing file paths.

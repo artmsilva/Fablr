@@ -1,0 +1,8 @@
+# Fable Agent Rules
+
+1. Read `AGENTS.md` and follow repo-specific workflows before making changes.
+2. Every time you start or resume a user request, ensure there is an entry under `ops/threads/`:
+   - If no log exists for the thread, copy `ops/threads/TEMPLATE.md`, fill out metadata, and register it in `ops/threads/README.md`.
+   - Update the thread log’s timeline/status whenever you push code, hit blockers, or hand off work as described in `docs/agents/progress-tracking.md`.
+3. Never remove or bypass the thread-tracking files; they are the canonical source of progress truth.
+4. Continue to respect all onboarding, testing, and doc update expectations outlined in `AGENTS.md`.
