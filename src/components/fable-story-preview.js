@@ -1,8 +1,10 @@
 import { PROJECT_NAME } from "@config";
 import {
   getCurrentArgs,
+  getCurrentPermutationBlueprint,
   getCurrentSlots,
   getProcessedSlots,
+  getSelectedPermutation,
   getSelectedStory,
   getStories,
   getView,
@@ -15,6 +17,9 @@ import "@design-system/header.js";
 import "@design-system/badge.js";
 import "@design-system/icon-button.js";
 import "@design-system/docs-page.js";
+import "@design-system/stack.js";
+import "@design-system/button.js";
+import "./fable-permutations-view.js";
 
 /**
  * Story Preview - Center preview area with header
@@ -26,6 +31,9 @@ export class FableStoryPreview extends LitElement {
     _args: { state: true },
     _slots: { state: true },
     _view: { state: true },
+    _permutationBlueprint: { state: true },
+    _permutationSelection: { state: true },
+    _activeTab: { state: true },
   };
 
   constructor() {
@@ -35,6 +43,9 @@ export class FableStoryPreview extends LitElement {
     this._args = getCurrentArgs();
     this._slots = getCurrentSlots();
     this._view = getView();
+    this._permutationBlueprint = getCurrentPermutationBlueprint();
+    this._permutationSelection = getSelectedPermutation();
+    this._activeTab = "preview";
     this._handleStateChange = this._handleStateChange.bind(this);
   }
 
@@ -54,22 +65,31 @@ export class FableStoryPreview extends LitElement {
 
   _handleStateChange(e) {
     const key = e.detail.key;
-    if (
-      ["stories", "selectedStory", "currentArgs", "currentSlots"].includes(key)
-    ) {
+    if (["stories", "selectedStory", "currentArgs", "currentSlots"].includes(key)) {
       this._stories = getStories();
       this._selected = getSelectedStory();
       this._args = getCurrentArgs();
       this._slots = getCurrentSlots();
+      this._permutationBlueprint = getCurrentPermutationBlueprint();
+      this._permutationSelection = getSelectedPermutation();
+      this._activeTab = "preview";
       this.requestUpdate();
     }
     if (key === "view") {
       this._view = getView();
     }
+    if (key === "selectedPermutation") {
+      this._permutationSelection = getSelectedPermutation();
+      this.requestUpdate();
+    }
   }
 
   _handleSourceClick() {
     toggleSourceDrawer();
+  }
+
+  _setActiveTab(tab) {
+    this._activeTab = tab;
   }
 
   render() {
@@ -90,8 +110,7 @@ export class FableStoryPreview extends LitElement {
 
     if (isDocsStory) {
       const docTitle = story?.title || group.meta?.title || this._selected.name;
-      const docDescription =
-        story?.description || group.meta?.description || "";
+      const docDescription = story?.description || group.meta?.description || "";
       const parsed = parseMarkdown(story?.content || group.meta?.content || "");
 
       return html`
@@ -111,18 +130,29 @@ export class FableStoryPreview extends LitElement {
     const storyFn = typeof story === "function" ? story : story.render;
     const processedSlots = getProcessedSlots();
 
+    const hasPermutations = Boolean(this._permutationBlueprint?.axes?.length);
+    const activeTab = hasPermutations ? this._activeTab : "preview";
+
+    const previewCanvas = html`
+      <fable-preview>
+        <div class="story-area">${storyFn(this._args, processedSlots)}</div>
+      </fable-preview>
+    `;
+
     return html`
       <div class="preview-card">
         <fable-header>
           <h3>${group.meta.title} — ${this._selected.name}</h3>
           <div class="preview-meta">
-            ${status
-              ? html`<fable-badge
+            ${
+              status
+                ? html`<fable-badge
                   variant=${status}
                   tooltip=${getStatusTooltip(status)}
                   >${status}</fable-badge
                 >`
-              : ""}
+                : ""
+            }
             <fable-icon-button
               aria-label="View source code"
               @click=${this._handleSourceClick}
@@ -131,9 +161,38 @@ export class FableStoryPreview extends LitElement {
             </fable-icon-button>
           </div>
         </fable-header>
-        <fable-preview>
-          <div class="story-area">${storyFn(this._args, processedSlots)}</div>
-        </fable-preview>
+        ${
+          hasPermutations
+            ? html`
+              <fable-stack align-items="start">
+                <div class="preview-tab-row">
+                  <fable-button
+                    variant=${activeTab === "preview" ? "primary" : "secondary"}
+                    @click=${() => this._setActiveTab("preview")}
+                  >
+                    Preview
+                  </fable-button>
+                  <fable-button
+                    variant=${activeTab === "permutations" ? "primary" : "secondary"}
+                    @click=${() => this._setActiveTab("permutations")}
+                  >
+                    Permutations
+                  </fable-button>
+                </div>
+              </fable-stack>
+            `
+            : ""
+        }
+        ${
+          activeTab === "permutations" && hasPermutations
+            ? html`
+              <fable-permutations-view
+                .blueprint=${this._permutationBlueprint}
+                .selection=${this._permutationSelection}
+              ></fable-permutations-view>
+            `
+            : previewCanvas
+        }
       </div>
     `;
   }

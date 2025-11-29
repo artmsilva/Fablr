@@ -27,6 +27,8 @@ class AppStore {
       theme:
         localStorage.getItem(THEME_STORAGE_KEY) ||
         (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"),
+      selectedPermutation: null,
+      permutationSelections: {},
     };
   }
 
@@ -99,11 +101,14 @@ class AppStore {
    */
   setStories(newStories) {
     this.state.stories = newStories;
+    this.state.permutationSelections = {};
+    this.state.selectedPermutation = null;
     this.notifyStateChange("stories");
+    this.notifyStateChange("selectedPermutation");
   }
 
   selectStory(groupIndex, name, options = {}) {
-    const { argsOverride, slotsOverride, syncURL = true } = options;
+    const { argsOverride, slotsOverride, syncURL = true, permutationSelection = null } = options;
     const story = this.state.stories[groupIndex];
     if (!story) return;
 
@@ -111,6 +116,8 @@ class AppStore {
 
     const storyData = story.stories[name];
     const baseArgs = { ...(story.meta?.args || {}) };
+    const storyKey = this._buildStoryKey(groupIndex, name);
+    const blueprint = this._getPermutationBlueprint(groupIndex);
 
     // If story is an object with args function, compute the args
     if (typeof storyData === "object" && storyData.args) {
@@ -121,6 +128,19 @@ class AppStore {
 
     if (argsOverride) {
       this.state.currentArgs = { ...this.state.currentArgs, ...argsOverride };
+    }
+
+    const normalizedPerm =
+      this._normalizePermutationSelection(blueprint, permutationSelection) ||
+      this.state.permutationSelections[storyKey] ||
+      null;
+    if (normalizedPerm && blueprint) {
+      const permArgs = this._getPermutationArgs(blueprint, normalizedPerm);
+      this.state.currentArgs = { ...this.state.currentArgs, ...permArgs };
+      this.state.permutationSelections[storyKey] = normalizedPerm;
+      this.state.selectedPermutation = normalizedPerm;
+    } else {
+      this.state.selectedPermutation = null;
     }
 
     this.state.currentSlots = { ...(story.meta?.slots || {}) };
@@ -142,6 +162,7 @@ class AppStore {
     this.notifyStateChange("currentArgs");
     this.notifyStateChange("currentSlots");
     this.notifyStateChange("lockedArgs");
+    this.notifyStateChange("selectedPermutation");
 
     if (syncURL) {
       this._syncURL();
@@ -150,6 +171,7 @@ class AppStore {
 
   updateArg(key, value) {
     this.state.currentArgs = { ...this.state.currentArgs, [key]: value };
+    this._clearPermutationSelection();
     this.notifyStateChange("currentArgs");
     this._syncURL();
   }
@@ -160,7 +182,8 @@ class AppStore {
       this.state.stories,
       this.state.selectedStory.groupIndex,
       this.state.selectedStory.name,
-      this.state.currentArgs
+      this.state.currentArgs,
+      { permutation: this.state.selectedPermutation }
     );
     navigateTo(url, { replace });
   }
@@ -242,6 +265,97 @@ class AppStore {
     );
   }
 
+  _getPermutationBlueprint(groupIndex) {
+    const group = this.state.stories[groupIndex];
+    return group?.meta?.permutationBlueprint || null;
+  }
+
+  _buildStoryKey(groupIndex, storyName) {
+    return `${groupIndex}:${storyName}`;
+  }
+
+  _buildStoryKeyFromSelected() {
+    if (!this.state.selectedStory) return null;
+    return this._buildStoryKey(this.state.selectedStory.groupIndex, this.state.selectedStory.name);
+  }
+
+  _normalizePermutationSelection(blueprint, selection) {
+    if (!blueprint || !selection) return null;
+    const normalized = {};
+    let matched = 0;
+    const entries = Array.isArray(selection) ? selection : Object.entries(selection);
+    blueprint.axes.forEach((axis) => {
+      const found = entries.find(([axisId]) => axisId === axis.id || axisId === axis.label);
+      if (!found) return;
+      const [, valueId] = found;
+      const match = axis.values.find(
+        (candidate) =>
+          candidate.id === valueId ||
+          candidate.value === valueId ||
+          String(candidate.value) === String(valueId)
+      );
+      if (match) {
+        normalized[axis.id] = match.id;
+        matched += 1;
+      }
+    });
+    return matched ? normalized : null;
+  }
+
+  _getPermutationArgs(blueprint, selection) {
+    const args = {};
+    if (!blueprint || !selection) return args;
+    blueprint.axes.forEach((axis) => {
+      const valueId = selection[axis.id];
+      const match = axis.values.find((value) => value.id === valueId);
+      if (match?.args) {
+        Object.assign(args, match.args);
+      }
+    });
+    return args;
+  }
+
+  _clearPermutationSelection() {
+    const storyKey = this._buildStoryKeyFromSelected();
+    if (storyKey) {
+      delete this.state.permutationSelections[storyKey];
+    }
+    if (this.state.selectedPermutation) {
+      this.state.selectedPermutation = null;
+      this.notifyStateChange("selectedPermutation");
+    }
+  }
+
+  getSelectedPermutation() {
+    return this.state.selectedPermutation;
+  }
+
+  getCurrentPermutationBlueprint() {
+    if (!this.state.selectedStory) return null;
+    return this._getPermutationBlueprint(this.state.selectedStory.groupIndex);
+  }
+
+  selectPermutation(selection, options = {}) {
+    if (!this.state.selectedStory) return;
+    const { syncURL = true } = options;
+    const blueprint = this._getPermutationBlueprint(this.state.selectedStory.groupIndex);
+    if (!blueprint) return;
+    const normalized = this._normalizePermutationSelection(blueprint, selection);
+    if (!normalized) return;
+    const storyKey = this._buildStoryKeyFromSelected();
+    if (storyKey) {
+      this.state.permutationSelections[storyKey] = normalized;
+    }
+    this.state.selectedPermutation = normalized;
+    const permArgs = this._getPermutationArgs(blueprint, normalized);
+    this.state.currentArgs = { ...this.state.currentArgs, ...permArgs };
+    this.notifyStateChange("selectedPermutation");
+    this.notifyStateChange("currentArgs");
+    if (syncURL) {
+      this._syncURL();
+    }
+  }
+
   getRecentComponents(limit = 6) {
     const components = this.state.metadata.components || [];
     const sorted = [...components].sort((a, b) => {
@@ -308,6 +422,8 @@ export const getCurrentSlots = () => store.getCurrentSlots();
 export const getLockedArgs = () => store.getLockedArgs();
 export const getSourceDrawerOpen = () => store.getSourceDrawerOpen();
 export const getTheme = () => store.getTheme();
+export const getSelectedPermutation = () => store.getSelectedPermutation();
+export const getCurrentPermutationBlueprint = () => store.getCurrentPermutationBlueprint();
 export const setStories = (newStories) => store.setStories(newStories);
 export const selectStory = (groupIndex, name, options) =>
   store.selectStory(groupIndex, name, options);
@@ -326,3 +442,5 @@ export const getHomepageHighlightCards = () => store.getHighlightCards();
 export const getHomepageRecentComponents = (limit) => store.getRecentComponents(limit);
 export const getHomepageTaxonomyGroups = () => store.getTaxonomyGroups();
 export const getHomepageSearchSpotlights = () => store.getSearchSpotlights();
+export const selectPermutation = (selection, options) =>
+  store.selectPermutation(selection, options);

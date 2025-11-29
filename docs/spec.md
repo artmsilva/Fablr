@@ -9,16 +9,16 @@
 
 ### Permutations Engine
 
-- **Goal**: Allow authors to mark stories as permutable so visitors can preview a grid of variant combinations (size × tone × state, etc.).
+- **Goal**: Auto-generate permutations by inferring axes/values from component code, meta args, and story definitions so authors never hand-write permutations metadata.
 - **User Experience**:
-  - “Permutations” tab beside existing controls.
-  - Facet selectors for each axis; render matrix in preview panel with sticky headers.
-  - Respect locked args and display derived code snippet per cell.
+  - `Permutations` tab beside existing controls with an “Auto” badge + axis count.
+  - Axis filters show the signal source (enum, boolean, story) and can be toggled to trim the grid.
+  - Virtualized grid/list renders every valid combination; selecting a cell syncs preview + URL and exposes copy/CSV/export actions.
 - **Technical Approach**:
-  - Extend story meta with `permutations` definition (axes + allowed values, optional `maxCases` cap).
-  - Update story processor to validate and store permutation metadata.
-  - New virtualized grid component to render combinations efficiently.
-- **Dependencies**: Schema validation (JSON schema or TS types) and tooling to enforce metadata completeness.
+  - Enhance `processStories` (`src/utils/story-processor.js`) with an `analyzePermutations` step that inspects `customElements.get(meta.component).properties`, `meta.argTypes`, and `stories` to build a blueprint (`axes`, budget, warnings).
+  - Store the blueprint alongside story metadata (`story.meta.permutationBlueprint`) and persist selection state in `app-store`.
+  - Extend the router + URL manager to encode `?perm=variant.beta+disabled.false`, and teach `fable-story-preview` / `fable-permutations-view` how to consume the blueprint.
+- **Dependencies**: Router/query parsing (URLPattern spec), virtualization utilities shared with icons grid, optional `permutationHints` author annotations defined in component code (not metadata).
 
 ### Docs Story Type
 
