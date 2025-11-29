@@ -6,4 +6,6 @@ This index lists every active or archived user thread so agents can see who owns
 | ------ | ----- | ------ | ----------- | ------- |
 | [2025-11-28-progress-tracking](ops/threads/2025-11-28-progress-tracking.md) | codex | Done | 2025-11-28 | Documented workflow + rules so every thread is logged. |
 | [2025-11-28-homepage](ops/threads/2025-11-28-homepage.md) | codex | Reviewing | 2025-11-28 | Implement Homepage / Discovery view per spec (router + hero/cards/recent data). |
+| [2025-11-28-styles-regression](ops/threads/2025-11-28-styles-regression.md) | codex | Done | 2025-11-29 | Rebuild styling via design-system components instead of `src/style.css`. |
+| [2025-11-28-icons-detail-view](ops/threads/2025-11-28-icons-detail-view.md) | codex | Done | 2025-11-29 | Fix icons page so detail renders via the third column controls panel. |
 | _(Add new rows here)_ | – | – | – | Copy `ops/threads/TEMPLATE.md` to start tracking another thread. |

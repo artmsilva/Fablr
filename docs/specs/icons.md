@@ -46,9 +46,11 @@ flowchart TB
 ## Technical Design
 
 - **Components**
-  - `<fable-icon-gallery>`: renders search + grid.
-  - `<fable-icon-tile>`: handles preview, background toggle, copy button.
+  - `<fable-icon-grid>`: renders the icon tiles/grid layout.
   - `<fable-icon-detail>`: shows metadata and usage copy written in Markdown.
+  - `<fable-icons-view>` orchestrates router state + selection while delegating visuals to the design-system components.
+- **Styling**
+  - Gallery and detail surfaces live inside the design-system layer so `/icons` no longer depends on `src/style.css`.
 - **Rendering**
   - Use CSS grid + virtualization library (or custom) for smooth scroll.
   - Background toggle cycles between light/dark/transparent for contrast checks.

@@ -259,9 +259,7 @@ const stories = {
     </fable-button>
     <fable-drawer position="right" width="600px">
       <div slot="title">Source Code</div>
-      <pre
-        style="background: var(--bg-primary); padding: var(--space-3); border-radius: var(--radius); overflow-x: auto;"
-      ><code>const myFunction = () => {
+      <pre class="drawer-story-code"><code>const myFunction = () => {
   console.log('Hello, World!');
   return 42;
 };</code></pre>

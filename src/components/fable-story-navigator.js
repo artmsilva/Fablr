@@ -17,6 +17,8 @@ import "@design-system/sidebar.js";
 import "@design-system/nav-group.js";
 import "@design-system/badge.js";
 import "@design-system/link.js";
+import "@design-system/search-input.js";
+import "./fable-theme-toggle.js";
 import { navigateTo } from "../router.js";
 
 /**
@@ -41,7 +43,6 @@ export class FableStoryNavigator extends LitElement {
     this._icons = getIconMetadata();
     this._query = "";
     this._handleStateChange = this._handleStateChange.bind(this);
-    this.style.display = "contents";
   }
 
   createRenderRoot() {
@@ -255,12 +256,12 @@ export class FableStoryNavigator extends LitElement {
     return html`
       <fable-sidebar>
         <div class="navigator-search">
-          <input
-            type="search"
+          <fable-search-input
             placeholder="Search components, docs, tokens"
             .value=${this._query}
             @input=${this._handleSearchInput}
-          />
+          ></fable-search-input>
+          <fable-theme-toggle></fable-theme-toggle>
         </div>
         <section class="navigator-section">
           <h2 class="navigator-heading">Overview</h2>

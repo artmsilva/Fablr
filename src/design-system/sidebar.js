@@ -11,11 +11,16 @@ class FableSidebar extends LitElement {
 
   static styles = css`
     :host {
-      display: block;
-      padding-inline: var(--space-4);
       background-color: var(--bg-secondary);
-      overflow-y: auto;
       border-right: 1px solid var(--border-color);
+
+      display: block;
+      height: 100vh;
+      overflow-y: auto;
+      
+      padding-inline: var(--space-4);
+
+      margin-bottom: 16px;
     }
     :host([position="right"]) {
       border-right: none;

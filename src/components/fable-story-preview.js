@@ -35,8 +35,6 @@ export class FableStoryPreview extends LitElement {
     this._slots = getCurrentSlots();
     this._view = getView();
     this._handleStateChange = this._handleStateChange.bind(this);
-    this.style.display = "block";
-    this.style.height = "100%";
   }
 
   createRenderRoot() {
@@ -94,7 +92,7 @@ export class FableStoryPreview extends LitElement {
       <div class="preview-card">
         <fable-header>
           <h3>${group.meta.title} — ${this._selected.name}</h3>
-          <div style="display: flex; gap: var(--space-2); align-items: center;">
+          <div class="preview-meta">
             ${
               status
                 ? html`<fable-badge

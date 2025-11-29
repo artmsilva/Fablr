@@ -7,11 +7,11 @@ import {
   getView,
 } from "@store";
 import { html, LitElement } from "lit";
-import "./fable-home-hero.js";
-import "./fable-home-cards.js";
-import "./fable-home-activity.js";
-import "./fable-chip-group.js";
-import "./fable-search-spotlight.js";
+import "@design-system/hero-banner.js";
+import "@design-system/highlight-cards.js";
+import "@design-system/activity-feed.js";
+import "@design-system/filter-chips.js";
+import "@design-system/spotlight-list.js";
 
 export class FableHomeView extends LitElement {
   static properties = {
@@ -30,16 +30,6 @@ export class FableHomeView extends LitElement {
     this._selectedChip = "all";
     this._hydrateData();
     this._handleStateChange = this._handleStateChange.bind(this);
-    this.style.display = "block";
-    this.style.height = "100%";
-    this.style.overflowY = "auto";
-    this.style.background = "var(--bg-primary)";
-    this.style.color = "var(--text-primary)";
-    this.style.padding = "var(--space-6, 32px)";
-  }
-
-  createRenderRoot() {
-    return this;
   }
 
   connectedCallback() {
@@ -81,40 +71,50 @@ export class FableHomeView extends LitElement {
 
   render() {
     if (this._view?.name !== "home") {
-      return html`<div style="padding:32px;">Loading home...</div>`;
+      return html`<div class="home-view"><p>Loading home...</p></div>`;
     }
 
     return html`
-      <div class="home-grid">
-        <fable-home-hero .data=${this._hero}></fable-home-hero>
+      <div class="home-view">
+        <div class="home-grid">
+          <fable-hero-banner
+            .eyebrow=${this._hero?.eyebrow || ""}
+            .title=${this._hero?.title || ""}
+            .description=${this._hero?.description || ""}
+            .ctas=${this._hero?.ctas || []}
+            .stats=${this._hero?.stats || []}
+          ></fable-hero-banner>
 
-        <section class="home-section">
-          <header class="home-section-header">
-            <h2 class="home-section-title">Highlights</h2>
-          </header>
-          <fable-home-cards .cards=${this._cards}></fable-home-cards>
-        </section>
+          <section class="section">
+            <header class="section-header">
+              <h2 class="section-title">Highlights</h2>
+            </header>
+            <fable-highlight-cards
+              .cards=${this._cards}
+            ></fable-highlight-cards>
+          </section>
 
-        <section class="home-section" @chip-select=${this._handleChipSelect}>
-          <header class="home-section-header">
-            <h2 class="home-section-title">Recent activity</h2>
-          </header>
-          <fable-chip-group
-            .chips=${this._chips}
-            .active=${this._selectedChip}
-          ></fable-chip-group>
-          <div class="home-two-column">
-            <fable-home-activity
-              .items=${this._filteredActivity()}
-            ></fable-home-activity>
-            <div class="home-spotlight-card">
-              <h3 class="home-section-title">Search spotlight</h3>
-              <fable-search-spotlight
-                .items=${this._spotlights}
-              ></fable-search-spotlight>
+          <section class="section" @chip-select=${this._handleChipSelect}>
+            <header class="section-header">
+              <h2 class="section-title">Recent activity</h2>
+            </header>
+            <fable-filter-chips
+              .chips=${this._chips}
+              .active=${this._selectedChip}
+            ></fable-filter-chips>
+            <div class="two-column">
+              <fable-activity-feed
+                .items=${this._filteredActivity()}
+              ></fable-activity-feed>
+              <div class="spotlight-card">
+                <h3 class="section-title">Search spotlight</h3>
+                <fable-spotlight-list
+                  .items=${this._spotlights}
+                ></fable-spotlight-list>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     `;
   }

@@ -23,6 +23,7 @@ const warnings: LintError[] = [];
 
 // Patterns to detect CSS styles in components
 const STYLE_PATTERN = /static\s+styles\s*=\s*css`/;
+const FORBIDDEN_HEAD_APPEND_PATTERN = /document\.head\.appendChild/;
 
 async function lintFile(filePath: string, allowStyles: boolean): Promise<void> {
   try {
@@ -32,6 +33,36 @@ async function lintFile(filePath: string, allowStyles: boolean): Promise<void> {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+
+      if (FORBIDDEN_HEAD_APPEND_PATTERN.test(line)) {
+        errors.push({
+          file: filePath,
+          line: i + 1,
+          message:
+            "Do not mutate document.head directly. Use Lit static styles or scoped templates instead.",
+          snippet: line.trim(),
+        });
+        continue;
+      }
+
+      if (!fileCanHaveStyles) {
+        if (/\bstyle\s*=/.test(line)) {
+          errors.push({
+            file: filePath,
+            line: i + 1,
+            message: "Inline style attributes are not allowed. Move styles to CSS.",
+            snippet: line.trim(),
+          });
+        }
+        if (line.includes("this.style")) {
+          errors.push({
+            file: filePath,
+            line: i + 1,
+            message: "Setting styles via `this.style` is not allowed. Use CSS classes instead.",
+            snippet: line.trim(),
+          });
+        }
+      }
 
       if (STYLE_PATTERN.test(line)) {
         if (!fileCanHaveStyles) {

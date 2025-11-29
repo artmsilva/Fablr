@@ -1,6 +1,6 @@
 import { getSelectedStory, getSourceDrawerOpen, getStories, toggleSourceDrawer } from "@store";
 import { getStorySource } from "@utils";
-import { css, html, LitElement } from "lit";
+import { html, LitElement } from "lit";
 import "@design-system/drawer.js";
 import "@design-system/icon-button.js";
 import "@design-system/code-block.js";
@@ -9,12 +9,6 @@ import "@design-system/code-block.js";
  * Source Drawer - Bottom drawer showing story source code
  */
 export class FableSourceDrawer extends LitElement {
-  static styles = css`
-    :host {
-      display: contents;
-    }
-  `;
-
   static properties = {
     _open: { state: true },
     _stories: { state: true },
@@ -79,7 +73,6 @@ export class FableSourceDrawer extends LitElement {
           <fable-icon-button
             aria-label="Copy source code"
             @click=${() => this._copyToClipboard()}
-            style="margin-left: var(--space-2);"
           >
             📋
           </fable-icon-button>

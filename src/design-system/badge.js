@@ -209,7 +209,7 @@ const stories = {
     }),
     lockedArgs: { size: true },
     render: (_args, _slots) => html`
-      <div style="display: flex; gap: 8px; align-items: center;">
+      <div class="badge-story-row">
         <fable-badge variant="alpha" size="condensed">alpha</fable-badge>
         <fable-badge variant="beta" size="condensed">beta</fable-badge>
         <fable-badge variant="stable" size="condensed">stable</fable-badge>

@@ -32,7 +32,6 @@ import "@design-system";
 import "./components/fable-story-navigator.js";
 import "./components/fable-story-preview.js";
 import "./components/fable-controls-panel.js";
-import "./components/fable-theme-toggle.js";
 import "./components/fable-source-drawer.js";
 import "./components/fable-docs-view.js";
 import "./components/fable-tokens-view.js";
@@ -56,18 +55,15 @@ class FableApp extends LitElement {
       display: grid;
       grid-template-columns: 300px 1fr 300px;
       height: 100vh;
-      gap: 0;
+      overflow: hidden;
+      gap: var(--space-4);
       position: relative;
     }
     .view-host {
       position: relative;
       border-right: 1px solid var(--border-color);
-      overflow: hidden;
-    }
-    .view-host > * {
-      position: absolute;
-      inset: 0;
-      display: flex;
+      overflow-y: auto;
+      height: 100vh;
     }
     .view-host > :not(.active) {
       opacity: 0;
@@ -76,12 +72,6 @@ class FableApp extends LitElement {
     .view-host > .active {
       opacity: 1;
       pointer-events: auto;
-    }
-    .theme-toggle-wrapper {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 100;
     }
   `;
 
@@ -243,9 +233,6 @@ class FableApp extends LitElement {
         <fable-story-navigator></fable-story-navigator>
         <div class="view-host">${this._renderActiveView()}</div>
         <fable-controls-panel></fable-controls-panel>
-        <div class="theme-toggle-wrapper">
-          <fable-theme-toggle></fable-theme-toggle>
-        </div>
         <fable-source-drawer></fable-source-drawer>
       </main>
     `;

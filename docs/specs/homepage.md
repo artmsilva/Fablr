@@ -53,11 +53,14 @@ flowchart TB
 
 - **Routing**: `/` defaults to home; selecting a story pushes `/components/{group}/{story}`.
 - **Components**:
-  - `<fable-home-hero>`
-  - `<fable-home-cards>`
-  - `<fable-home-activity>`
-  - `<fable-chip-group>`
-  - `<fable-search-spotlight>`
+  - `<fable-hero-banner>`
+  - `<fable-highlight-cards>`
+  - `<fable-activity-feed>`
+  - `<fable-filter-chips>`
+  - `<fable-spotlight-list>`
+  - `<fable-home-view>` orchestrates layout/state.
+- **Styling**:
+  - Home experience relies on scoped design-system components so it no longer depends on `src/style.css` overrides.
 - **State Flow**:
   - On load, `app-store` derives `recentStories` sorted by `updatedAt`.
   - Taxonomy chip selection filters dataset; home components subscribe to derived selectors.

@@ -77,7 +77,7 @@ const stories = {
     </fable-nav-group>
   `,
   "Multiple Groups": (_args) => html`
-    <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div class="nav-group-story">
       <fable-nav-group title="Forms">
         <fable-link>Button</fable-link>
         <fable-link>Input</fable-link>

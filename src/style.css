@@ -88,21 +88,22 @@
   --outline-offset: var(--space-base);
 }
 
-/** global tokens */
-:root {
-  --font-stack:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* App component styles */
-
+/* App component styles (design-system components now encapsulate home view visuals) */
 fable-home-view {
-  background: var(--bg-primary);
+  display: block;
+  height: 100%;
   color: var(--text-primary);
-  font-family: var(--font-stack, system-ui);
+  background: var(--bg-primary);
 }
 
-fable-home-view .home-grid {
+.home-view {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-6, 32px);
+  box-sizing: border-box;
+}
+
+.home-grid {
   display: flex;
   flex-direction: column;
   gap: var(--space-5, 24px);
@@ -110,414 +111,45 @@ fable-home-view .home-grid {
   margin: 0 auto;
 }
 
-fable-home-view .home-section {
+.section {
   display: flex;
   flex-direction: column;
   gap: var(--space-3, 12px);
 }
 
-fable-home-view .home-section-header {
+.section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-fable-home-view .home-section-title {
+.section-title {
   margin: 0;
   font-size: 1.2rem;
 }
 
-fable-home-view .home-two-column {
+.two-column {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
   gap: var(--space-4, 18px);
   align-items: start;
 }
 
-fable-home-view .home-spotlight-card {
+.spotlight-card {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: var(--space-4, 16px);
   background: var(--bg-secondary);
 }
 
-fable-home-hero .home-hero {
-  border-radius: 18px;
-  padding: var(--space-6, 32px);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--primary-color, #5b4efc) 80%, transparent),
-    var(--bg-secondary, #131322)
-  );
-  color: var(--text-on-primary, #fff);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, rgba(255, 255, 255, 0.35) 50%, transparent);
+fable-story-navigator {
+  display: contents;
 }
 
-fable-home-hero .home-hero-eyebrow {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-2, 8px);
-  color: color-mix(in srgb, #fff 70%, transparent);
-}
-
-fable-home-hero .home-hero-title {
-  margin: 0 0 var(--space-3, 12px);
-  font-size: clamp(1.8rem, 3vw, 2.7rem);
-}
-
-fable-home-hero .home-hero-description {
-  margin: 0;
-  font-size: 1rem;
-  max-width: 62ch;
-  color: color-mix(in srgb, #fff 85%, transparent);
-}
-
-fable-home-hero .home-hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: var(--space-4, 16px);
-}
-
-fable-home-hero .home-hero-cta {
-  text-decoration: none;
-  border-radius: 999px;
-  padding: 10px 18px;
-  font-weight: 600;
-  border: 1px solid color-mix(in srgb, #fff 35%, transparent);
-  color: inherit;
-}
-
-fable-home-hero .home-hero-cta.is-primary {
-  background: #fff;
-  color: #0b0b1f;
-}
-
-fable-home-hero .home-hero-stats {
-  display: flex;
-  gap: 24px;
-  margin-top: var(--space-5, 20px);
-  flex-wrap: wrap;
-  border-top: 1px solid color-mix(in srgb, #fff 25%, transparent);
-  padding-top: var(--space-4, 16px);
-}
-
-fable-home-hero .home-hero-stat-value {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-fable-home-hero .home-hero-stat-label {
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-
-fable-home-cards .home-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-3, 12px);
-}
-
-fable-home-cards .home-card {
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: var(--space-4, 16px);
-  background: var(--bg-secondary);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 160px;
-}
-
-fable-home-cards .home-card-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-}
-
-fable-home-cards .home-card-title {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-fable-home-cards .home-card-description {
-  margin: 0;
-  flex: 1;
-  color: var(--text-secondary);
-}
-
-fable-home-cards .home-card-link {
-  align-self: flex-start;
-  text-decoration: none;
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-fable-home-activity .home-activity-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-fable-home-activity .home-activity-item {
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
-  padding: var(--space-3, 12px) var(--space-4, 16px);
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  background: var(--bg-secondary);
-}
-
-fable-home-activity .home-activity-details {
-  flex: 1;
-}
-
-fable-home-activity .home-activity-title {
-  margin: 0;
-  font-size: 1rem;
-}
-
-fable-home-activity .home-activity-meta {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-fable-home-activity .home-activity-tags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 6px;
-}
-
-fable-home-activity .home-activity-tag {
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-}
-
-fable-home-activity .home-activity-link {
-  text-decoration: none;
-  border-radius: 999px;
-  border: 1px solid var(--border-color);
-  padding: 6px 12px;
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-fable-chip-group .home-chip-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-fable-chip-group .home-chip {
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  background: var(--bg-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-}
-
-fable-chip-group .home-chip[aria-pressed="true"] {
-  background: var(--primary-color);
-  color: #fff;
-  border-color: var(--primary-color);
-}
-
-fable-chip-group .home-chip-count {
-  font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: color-mix(in srgb, #000 20%, transparent);
-  color: inherit;
-}
-
-fable-search-spotlight .search-spotlight-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 8px;
-}
-
-fable-search-spotlight .search-spotlight-item {
-  border: 1px dashed var(--border-color);
-  border-radius: 12px;
-  padding: var(--space-3, 12px) var(--space-4, 16px);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  background: var(--bg-secondary);
-}
-
-fable-search-spotlight .search-spotlight-title {
-  font-size: 0.95rem;
-}
-
-fable-search-spotlight .search-spotlight-description {
-  margin: 0;
-  color: var(--text-secondary);
-}
-
-fable-search-spotlight .search-spotlight-link {
-  align-self: flex-start;
-  text-decoration: none;
-  font-weight: 600;
-  color: var(--primary-color);
-}
-
-fable-docs-view {
-  display: block;
-  height: 100%;
-  overflow-y: auto;
-  padding: var(--space-6, 32px);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-stack, "Inter", system-ui);
-}
-
-fable-docs-view article {
-  max-width: 920px;
-  margin: 0 auto;
-  line-height: 1.6;
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(220px, 1fr);
-  gap: var(--space-6, 32px);
-}
-
-fable-docs-view .doc-body {
-  max-width: 680px;
-}
-
-fable-docs-view h1,
-fable-docs-view h2,
-fable-docs-view h3 {
-  color: var(--text-heading, var(--text-primary));
-}
-
-fable-docs-view pre {
-  background: var(--bg-secondary);
-  padding: var(--space-3, 16px);
-  border-radius: var(--radius, 12px);
-  overflow-x: auto;
-}
-
-fable-docs-view nav.toc {
-  position: sticky;
-  top: 24px;
-  align-self: start;
-  padding: var(--space-4);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius, 12px);
-  background: var(--bg-secondary);
-}
-
-fable-docs-view nav.toc h4 {
-  margin: 0 0 var(--space-2);
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-}
-
-fable-docs-view nav.toc ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-fable-docs-view nav.toc a {
-  text-decoration: none;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-}
-
-fable-docs-view nav.toc a:hover {
-  color: var(--text-primary);
-}
-
-fable-icons-view {
-  display: block;
-  height: 100%;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-fable-icons-view .layout {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
-  gap: var(--space-6, 32px);
-  padding: var(--space-5, 24px);
-  height: 100%;
-}
-
-fable-icons-view .grid-container {
-  overflow-y: auto;
-  padding-right: var(--space-3);
-}
-
-fable-icons-view .icon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: var(--space-3, 12px);
-}
-
-fable-icons-view .icon-card {
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius, 12px);
-  padding: var(--space-3, 12px);
-  background: var(--bg-secondary);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2, 8px);
-  text-align: center;
-  cursor: pointer;
-}
-
-fable-icons-view .icon-card.active {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary-color) 40%, transparent);
-}
-
-fable-icons-view .detail-panel {
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius, 12px);
-  padding: var(--space-4);
-  background: var(--bg-secondary);
-  position: sticky;
-  top: 24px;
-  align-self: start;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-fable-icons-view .detail-panel button {
-  font-size: 0.8rem;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: transparent;
-  cursor: pointer;
+fable-controls-panel,
+fable-source-drawer,
+fable-theme-toggle {
+  display: contents;
 }
 
 fable-story-navigator fable-sidebar {
@@ -532,20 +164,13 @@ fable-story-navigator .navigator-search {
   background: var(--bg-secondary, #f5f5f5);
   padding: var(--space-2) 0;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
 }
 
-fable-story-navigator .navigator-search input {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--border-color, #e0e0e0);
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #111);
-  font-size: 0.9rem;
-}
-
-fable-story-navigator .navigator-search input:focus {
-  outline: 2px solid var(--primary-color);
+fable-story-navigator .navigator-search fable-search-input {
+  flex: 1;
 }
 
 fable-story-navigator .navigator-section {
@@ -587,6 +212,33 @@ fable-story-preview .story-area {
   height: 100%;
 }
 
+fable-story-preview .preview-meta {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+fable-icons-view {
+  display: block;
+  height: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.icons-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6, 32px);
+  padding: var(--space-5, 24px);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.icons-layout .grid-container {
+  overflow-y: auto;
+  padding-right: var(--space-3, 12px);
+}
+
 fable-tokens-view {
   display: block;
   height: 100%;
@@ -594,84 +246,39 @@ fable-tokens-view {
   color: var(--text-primary);
 }
 
-fable-tokens-view .tokens-layout {
+.tokens-layout {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
   gap: var(--space-6, 32px);
   height: 100%;
   padding: var(--space-5, 24px);
+  box-sizing: border-box;
 }
 
-fable-tokens-view .token-list {
+.tokens-layout .token-list {
   overflow-y: auto;
   padding-right: var(--space-3, 12px);
 }
 
-fable-tokens-view .token-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-4, 16px);
+/* Story helper styles */
+.drawer-story-code {
+  background: var(--bg-primary);
+  padding: var(--space-3, 12px);
+  border-radius: var(--radius, 8px);
+  overflow-x: auto;
+  display: block;
 }
 
-fable-tokens-view .token-card {
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius, 12px);
-  padding: var(--space-4, 16px);
-  background: var(--bg-secondary);
-  cursor: pointer;
-}
-
-fable-tokens-view .token-card.active {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary-color) 40%, transparent);
-}
-
-fable-tokens-view .token-detail {
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius, 12px);
-  padding: var(--space-4);
-  background: var(--bg-secondary);
-  position: sticky;
-  top: 24px;
-  align-self: start;
+.nav-group-story {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 8px;
 }
 
-fable-tokens-view .swatch {
-  width: 100%;
-  height: 64px;
-  border-radius: var(--radius, 12px);
-  margin-bottom: var(--space-3, 12px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-fable-tokens-view .meta {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-fable-tokens-view .detail-row {
+.badge-story-row {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-}
-
-fable-tokens-view .detail-row code {
-  background: rgba(0, 0, 0, 0.08);
-  padding: 2px 6px;
-  border-radius: 6px;
-}
-
-fable-tokens-view .token-detail button {
-  font-size: 0.85rem;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  background: transparent;
-  color: inherit;
+  gap: 8px;
+  align-items: center;
 }
 
 body {

@@ -1,6 +1,7 @@
 import { getTokenMetadata, getView } from "@store";
 import { buildTokensPath } from "@utils";
 import { html, LitElement } from "lit";
+import "@design-system/token-groups.js";
 import { navigateTo } from "../router.js";
 
 export class FableTokensView extends LitElement {
@@ -16,14 +17,6 @@ export class FableTokensView extends LitElement {
     this._view = getView();
     this._activeTokenId = null;
     this._handleStateChange = this._handleStateChange.bind(this);
-    this.style.display = "block";
-    this.style.height = "100%";
-    this.style.background = "var(--bg-primary)";
-    this.style.color = "var(--text-primary)";
-  }
-
-  createRenderRoot() {
-    return this;
   }
 
   connectedCallback() {
@@ -57,12 +50,7 @@ export class FableTokensView extends LitElement {
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(token);
     });
-    return [...groups.entries()];
-  }
-
-  _renderSwatch(token) {
-    if (token.tokenType !== "color") return null;
-    return html`<div class="swatch" style="background: ${token.value};"></div>`;
+    return [...groups.entries()].map(([name, tokens]) => ({ name, tokens }));
   }
 
   _getActiveToken() {
@@ -75,84 +63,21 @@ export class FableTokensView extends LitElement {
     navigateTo(buildTokensPath(token.id));
   }
 
-  _renderTokenDetail(token) {
-    if (!token) {
-      return html`<div class="token-detail">Select a token to inspect.</div>`;
-    }
-    return html`
-      <aside class="token-detail">
-        <h3>${token.title}</h3>
-        <div class="detail-row">
-          <span>Value</span>
-          <code>${token.value}</code>
-        </div>
-        <div class="detail-row">
-          <span>Type</span>
-          <code>${token.tokenType}</code>
-        </div>
-        ${
-          token.attributes?.cssVar
-            ? html`<div class="detail-row">
-              <span>CSS Var</span>
-              <code>${token.attributes.cssVar}</code>
-            </div>`
-            : null
-        }
-        <p>${token.description || "No description"}</p>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button @click=${() => navigator.clipboard.writeText(token.value)}>
-            Copy value
-          </button>
-          ${
-            token.attributes?.cssVar
-              ? html`<button
-                @click=${() => navigator.clipboard.writeText(token.attributes.cssVar)}
-              >
-                Copy CSS var
-              </button>`
-              : null
-          }
-        </div>
-      </aside>
-    `;
-  }
-
   render() {
     if (this._view?.name !== "tokens") {
       return html`<div>Select a token category to explore.</div>`;
     }
 
     const groups = this._groupedTokens();
-    const activeToken = this._getActiveToken();
     return html`
       <div class="tokens-layout">
         <div class="token-list">
-          ${groups.map(
-            ([group, tokens]) => html`
-              <section>
-                <h2>${group}</h2>
-                <div class="token-grid">
-                  ${tokens.map(
-                    (token) => html`
-                      <article
-                        class="token-card ${token.id === this._activeTokenId ? "active" : ""}"
-                        @click=${() => this._handleTokenSelect(token)}
-                      >
-                        ${this._renderSwatch(token)}
-                        <h3>${token.title}</h3>
-                        <div class="value">${token.value}</div>
-                        <div class="meta">
-                          ${token.description || token.tokenType}
-                        </div>
-                      </article>
-                    `
-                  )}
-                </div>
-              </section>
-            `
-          )}
+          <fable-token-groups
+            .groups=${groups}
+            .activeId=${this._activeTokenId}
+            @token-select=${(event) => this._handleTokenSelect(event.detail.token)}
+          ></fable-token-groups>
         </div>
-        ${this._renderTokenDetail(activeToken)}
       </div>
     `;
   }

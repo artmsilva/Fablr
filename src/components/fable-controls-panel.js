@@ -1,14 +1,19 @@
 import {
   getCurrentArgs,
   getCurrentSlots,
+  getDocsMetadata,
+  getIconMetadata,
   getLockedArgs,
   getSelectedStory,
   getStories,
+  getTokenMetadata,
+  getView,
   unlockArg,
   updateArg,
   updateSlot,
 } from "@store";
-import { css, html, LitElement } from "lit";
+import { parseMarkdown } from "@utils";
+import { html, LitElement } from "lit";
 import "@design-system/sidebar.js";
 import "@design-system/stack.js";
 import "@design-system/input.js";
@@ -16,23 +21,24 @@ import "@design-system/checkbox.js";
 import "@design-system/select.js";
 import "@design-system/textarea.js";
 import "@design-system/button.js";
+import "@design-system/token-detail.js";
+import "@design-system/doc-toc.js";
+import "@design-system/icon-detail.js";
 
 /**
  * Controls Panel - Right sidebar with story controls
  */
 export class FableControlsPanel extends LitElement {
-  static styles = css`
-    :host {
-      display: contents;
-    }
-  `;
-
   static properties = {
     _stories: { state: true },
     _selected: { state: true },
     _args: { state: true },
     _slots: { state: true },
     _locked: { state: true },
+    _view: { state: true },
+    _docs: { state: true },
+    _tokens: { state: true },
+    _icons: { state: true },
   };
 
   constructor() {
@@ -42,6 +48,10 @@ export class FableControlsPanel extends LitElement {
     this._args = getCurrentArgs();
     this._slots = getCurrentSlots();
     this._locked = getLockedArgs();
+    this._view = getView();
+    this._docs = getDocsMetadata();
+    this._tokens = getTokenMetadata();
+    this._icons = getIconMetadata();
     this._handleStateChange = this._handleStateChange.bind(this);
   }
 
@@ -65,6 +75,14 @@ export class FableControlsPanel extends LitElement {
       this._locked = getLockedArgs();
       this.requestUpdate();
     }
+    if (key === "view") {
+      this._view = getView();
+    }
+    if (key === "metadata") {
+      this._docs = getDocsMetadata();
+      this._tokens = getTokenMetadata();
+      this._icons = getIconMetadata();
+    }
   }
 
   _handleArgChange(key, value) {
@@ -77,6 +95,29 @@ export class FableControlsPanel extends LitElement {
 
   _handleUnlock(key) {
     unlockArg(key);
+  }
+
+  _activeDoc() {
+    if (this._view?.name !== "docs") return null;
+    const { section, slug, id } = this._view.params || {};
+    return this._docs.find((doc) => {
+      if (id && doc.id === id) return true;
+      return doc.section === section && doc.slug === slug;
+    });
+  }
+
+  _activeToken() {
+    if (this._view?.name !== "tokens") return null;
+    if (!this._tokens?.length) return null;
+    const targetId = this._view.params?.tokenId;
+    return this._tokens.find((token) => token.id === targetId) || this._tokens[0];
+  }
+
+  _activeIcon() {
+    if (this._view?.name !== "icons") return null;
+    if (!this._icons?.length) return null;
+    const targetId = this._view.params?.iconId;
+    return this._icons.find((icon) => icon.id === targetId) || this._icons[0];
   }
 
   _renderControl(key, group) {
@@ -172,6 +213,40 @@ export class FableControlsPanel extends LitElement {
   }
 
   render() {
+    if (this._view?.name === "docs") {
+      const doc = this._activeDoc();
+      const parsed = doc ? parseMarkdown(doc.content || "") : null;
+      return html`
+        <fable-sidebar position="right">
+          ${
+            parsed?.toc?.length
+              ? html`<fable-doc-toc .toc=${parsed.toc}></fable-doc-toc>`
+              : html`<p>No headings</p>`
+          }
+        </fable-sidebar>
+      `;
+    }
+
+    if (this._view?.name === "tokens") {
+      return html`
+        <fable-sidebar position="right">
+          <h3>Token detail</h3>
+          <fable-token-detail
+            .token=${this._activeToken()}
+          ></fable-token-detail>
+        </fable-sidebar>
+      `;
+    }
+
+    if (this._view?.name === "icons") {
+      return html`
+        <fable-sidebar position="right">
+          <h3>Icon detail</h3>
+          <fable-icon-detail .icon=${this._activeIcon()}></fable-icon-detail>
+        </fable-sidebar>
+      `;
+    }
+
     if (!this._selected) {
       return html`<fable-sidebar position="right">
         <p>Select a story to see controls</p>

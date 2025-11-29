@@ -1,7 +1,6 @@
 import { getDocsMetadata, getView } from "@store";
 import { parseMarkdown } from "@utils";
 import { html, LitElement } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 export class FableDocsView extends LitElement {
   static properties = {
@@ -14,13 +13,6 @@ export class FableDocsView extends LitElement {
     this._docs = getDocsMetadata();
     this._view = getView();
     this._handleStateChange = this._handleStateChange.bind(this);
-    this.style.display = "block";
-    this.style.height = "100%";
-    this.style.overflowY = "auto";
-  }
-
-  createRenderRoot() {
-    return this;
   }
 
   connectedCallback() {
@@ -60,33 +52,12 @@ export class FableDocsView extends LitElement {
 
     const parsed = parseMarkdown(doc.content || "");
     return html`
-      <article>
-        <div class="doc-body">
-          <header>
-            <p class="eyebrow">${doc.section}</p>
-            <h1>${doc.title}</h1>
-            ${doc.description ? html`<p class="summary">${doc.description}</p>` : null}
-          </header>
-          <section class="content">${unsafeHTML(parsed.html)}</section>
-        </div>
-        <nav class="toc">
-          <h4>On this page</h4>
-          <ul>
-            ${parsed.toc.map(
-              (entry) => html`
-                <li>
-                  <a
-                    href="#${entry.id}"
-                    style="margin-left: ${(entry.level - 1) * 10}px"
-                  >
-                    ${entry.text}
-                  </a>
-                </li>
-              `
-            )}
-          </ul>
-        </nav>
-      </article>
+      <fable-docs-page
+        .section=${doc.section || ""}
+        .title=${doc.title || ""}
+        .description=${doc.description || ""}
+        .content=${parsed.html || ""}
+      ></fable-docs-page>
     `;
   }
 }

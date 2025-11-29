@@ -56,9 +56,9 @@ flowchart LR
 
 ## Technical Components
 
-- `<fable-token-docs>`: orchestrates layout.
-- `<fable-token-table>`: renders tokens with virtualization for large sets.
-- `<fable-token-preview>`: small component evaluating CSS var and showing swatch or sample text.
+- `<fable-tokens-view>` orchestrates layout/state.
+- `<fable-token-groups>`: renders grouped token cards with swatches and metadata.
+- `<fable-token-detail>`: sticky inspector with copy actions.
 - Copy button uses Clipboard API with fallback.
 
 ## Build Pipeline
