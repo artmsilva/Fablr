@@ -12,4 +12,5 @@ This index lists every active or archived user thread so agents can see who owns
 | [2025-11-29-next-steps](ops/threads/2025-11-29-next-steps.md) | codex | Done | 2025-11-29 | Backlog triage for permutations/search/tokens and next-action recommendation. |
 | [2025-11-29-permutations-spec](ops/threads/2025-11-29-permutations-spec.md) | codex | Done | 2025-11-29 | Auto permutations spec + analyzer/preview implementation shipped. |
 | [2025-11-29-production-404](ops/threads/2025-11-29-production-404.md) | codex | Done | 2025-11-29 | Build now copies router/config/metadata + non-JS assets and serves un-hashed components for GH Pages. |
+| [2025-11-29-adopt-vite](ops/threads/2025-11-29-adopt-vite.md) | codex | Done | 2025-11-29 | ADR ratifies moving to Vite with import-map plugin and outlines follow-up tasks. |
 | _(Add new rows here)_ | – | – | – | Copy `ops/threads/TEMPLATE.md` to start tracking another thread. |
