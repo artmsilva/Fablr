@@ -10,7 +10,11 @@ const routeDefinitions = [
     name: "docs",
     pattern: new URLPattern({ pathname: "/docs/:section/:slug" }),
   },
-  { name: "tokens", pattern: new URLPattern({ pathname: "/tokens/:tokenId" }) },
+  { name: "playroom", pattern: new URLPattern({ pathname: "/playroom" }) },
+  {
+    name: "tokens",
+    pattern: new URLPattern({ pathname: "/tokens/:category" }),
+  },
   { name: "tokens", pattern: new URLPattern({ pathname: "/tokens" }) },
   { name: "icons", pattern: new URLPattern({ pathname: "/icons/:iconId" }) },
   { name: "icons", pattern: new URLPattern({ pathname: "/icons" }) },
@@ -20,18 +24,24 @@ let currentRoute = null;
 const listeners = new Set();
 let initialized = false;
 
-const buildURLForMatching = () => {
-  const { pathname, search, hash } = window.location;
-  const normalizedPath = stripBasePath(pathname) || "/";
-  return new URL(`${normalizedPath}${search || ""}${hash || ""}`, window.location.origin);
+const normalizePathname = (pathname) => {
+  if (!pathname || pathname === "/") return "/";
+  const withLeading = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  return withLeading.endsWith("/")
+    ? withLeading.slice(0, -1) || "/"
+    : withLeading;
 };
 
-const evaluateRoute = () => {
-  if (typeof window === "undefined") {
-    return { name: "home", params: {}, searchParams: new URLSearchParams() };
-  }
+const buildURLForMatching = () => {
+  const { pathname, search, hash } = window.location;
+  const normalizedPath = normalizePathname(stripBasePath(pathname) || "/");
+  return new URL(
+    `${normalizedPath}${search || ""}${hash || ""}`,
+    window.location.origin,
+  );
+};
 
-  const url = buildURLForMatching();
+const matchRoute = (url) => {
   for (const def of routeDefinitions) {
     const exec = def.pattern.exec(url);
     if (exec) {
@@ -48,6 +58,26 @@ const evaluateRoute = () => {
     searchParams: new URLSearchParams(url.search || ""),
   };
 };
+
+const evaluateRoute = () => {
+  if (typeof window === "undefined") {
+    return { name: "home", params: {}, searchParams: new URLSearchParams() };
+  }
+
+  const url = buildURLForMatching();
+  return matchRoute(url);
+};
+
+export const matchRoutePath = (pathname = "/", search = "") => {
+  const normalizedPath = normalizePathname(pathname);
+  const url = new URL(
+    `${normalizedPath}${search || ""}`,
+    "https://example.test",
+  );
+  return matchRoute(url);
+};
+
+export const getRouteDefinitions = () => routeDefinitions;
 
 const notify = () => {
   currentRoute = evaluateRoute();
@@ -81,7 +111,7 @@ export const subscribeToRouter = (callback, { immediate = true } = {}) => {
 export const navigateTo = (path, { replace = false } = {}) => {
   if (typeof window === "undefined") return;
   const [pathnamePart, searchPart = ""] = path.split("?");
-  const pathname = pathnamePart || "/";
+  const pathname = normalizePathname(pathnamePart || "/");
   const fullPath = prependBasePath(pathname);
   const search = searchPart ? `?${searchPart}` : "";
   const method = replace ? "replaceState" : "pushState";

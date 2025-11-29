@@ -2,14 +2,13 @@
 
 ## Overview
 
-Adopt the browser-native `URLPattern` API to create a declarative router that supports clean hierarchical paths, improved shareability, and integration with new views (home, docs, playroom, permutations).
+Adopt the browser-native `URLPattern` API to create a declarative router that supports clean hierarchical paths, improved shareability, and integration with new views (home, docs, playroom, permutations). No legacy query-mode compatibility or polyfill is required; break old URLs in favor of the new structure.
 
 ## Goals
 
 1. Map semantic URLs (`/components/{group}/{story}`, `/docs/{section}/{slug}`, `/playroom`) to view state.
-2. Maintain backward compatibility with legacy query-based URLs.
-3. Provide centralized router module emitting navigation events to the store.
-4. Support param parsing for permutations and filters via query strings.
+2. Provide centralized router module emitting navigation events to the store.
+3. Support param parsing for permutations and filters via query strings.
 
 ### Non-Goals
 
@@ -26,8 +25,6 @@ Adopt the browser-native `URLPattern` API to create a declarative router that su
 | `/playroom` | Playroom composer |
 | `/tokens/:category?` | Design tokens |
 | `/icons` | Icon gallery |
-
-Legacy query support: detect `?group=button&story=primary` and redirect to `/components/button/primary`.
 
 ## Router Architecture
 
@@ -52,10 +49,9 @@ flowchart LR
 
 ## Migration Plan
 
-1. Ship router in shadow mode: still update query params but also push new path.
-2. Add detection of legacy URLs -> redirect with `replaceState`.
-3. Update sharable links (copy button) to use new format.
-4. Deprecate legacy query usage after adoption window.
+1. Ship router with path-first navigation only (no query fallback).
+2. Update sharable links (copy button) to use new format.
+3. Document the breaking change and expected new URL shapes.
 
 ## Edge Cases
 
@@ -71,12 +67,11 @@ flowchart LR
 
 ## Dependencies
 
-- Browser support: `URLPattern` (Chromium 95+, Firefox 120+, Safari 17); provide ponyfill for older browsers.
+- Browser support: `URLPattern` (Chromium 95+, Firefox 120+, Safari 17+); no polyfill required.
 - Store actions for new views (home, docs, playroom, tokens, icons).
 
 ## Risks
 
-- **Browser compatibility**: Need polyfill; bundle small `urlpattern-polyfill`.
 - **Deep linking**: Must ensure resources loaded before router tries to render (especially docs fetch) → router waits for store ready promise.
 - **SEO**: Not primary focus but ensure server 200 for deep links via dev server fallback.
 
