@@ -15,4 +15,5 @@ This index lists every active or archived user thread so agents can see who owns
 | [2025-11-29-adopt-vite](ops/threads/2025-11-29-adopt-vite.md) | codex | Done | 2025-11-29 | ADR ratifies moving to Vite with import-map plugin and outlines follow-up tasks. |
 | [2025-11-29-vite-migration](ops/threads/2025-11-29-vite-migration.md) | codex | Done | 2025-11-29 | Vite config + plugin landed, scripts/docs updated, and build verified. |
 | [2025-11-29-playroom-composer](ops/threads/2025-11-29-playroom-composer.md) | codex | Active | 2025-11-29 | Complete playroom composer architecture and 4-week implementation roadmap with DSL parser, Monaco editor, sandboxed preview, and sharing features. |
+| [2025-11-29-opencode](ops/threads/2025-11-29-opencode.md) | codex | Active | 2025-11-29 | Save point committed to `main` (eaad6a9); playroom editor/persistence work added. |
 | _(Add new rows here)_ | – | – | – | Copy `ops/threads/TEMPLATE.md` to start tracking another thread. |
