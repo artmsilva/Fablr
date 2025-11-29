@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: "24"
       - name: Build
-        run: node --experimental-strip-types build.ts
+        run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
