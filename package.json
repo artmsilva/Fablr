@@ -4,10 +4,10 @@
   "description": "A simple component story explorer built with Lit",
   "type": "module",
   "scripts": {
-    "dev": "node --experimental-strip-types server.ts",
-    "start": "node --experimental-strip-types server.ts",
-    "build": "node --experimental-strip-types build.ts",
-    "preview": "cd dist && python3 -m http.server 8080",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "validate:metadata": "node scripts/validate-metadata.js",
     "tokens:sync": "node scripts/sync-tokens.js",
     "icons:sync": "node scripts/sync-icons.js",
@@ -28,6 +28,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "ajv": "^8.17.1"
+    "ajv": "^8.17.1",
+    "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "lit": "^3.3.1"
   }
 }

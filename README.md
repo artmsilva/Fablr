@@ -1,12 +1,12 @@
 # fable
 
-A lightweight component story viewer built with Lit web components, zero bundlers, and colocated stories.
+A lightweight component story viewer built with Lit web components, powered by Vite, and colocated stories.
 
 Live demo: https://artmsilva.github.io/fable/
 
 ## What this repo contains
 
-- **src/index.html** — app entry with import map for Lit (via esm.sh CDN)
+- **src/index.html** — app entry (Vite root)
 - **src/style.css** — base design system styles and CSS variables
 - **src/app.js** — main Lit app with three-panel layout (sidebar, preview, controls)
 - **src/components/** — web components with colocated stories (prefix-free filenames)
@@ -14,6 +14,8 @@ Live demo: https://artmsilva.github.io/fable/
   - `input.js` — input field with label
   - `card.js` — card container with title and slot
   - `link.js` — internal navigation link with active state
+- **config/import-map.json** — canonical alias map consumed by the custom Vite plugin
+- **plugins/import-map-plugin.ts** — registers the import-map aliases with Vite so existing specifiers keep working
 
 ## Architecture
 
@@ -66,7 +68,6 @@ All arg changes update the URL for shareability. Slot changes are local UI state
 - **Browser history** — Back/forward navigation works
 - **Live controls** — Edit props and slots in real-time
 - **Locked args** — Visual indication of hardcoded story values with unlock option
-- **Zero build step** — Import maps + native ES modules
 - **Lit 3 native spread** — Uses `...=${}` syntax for spreading props
 
 ## Publish / GitHub Pages
@@ -78,50 +79,24 @@ After the workflow runs or Pages is enabled, the site will be available at:
 
 ## Local development
 
-Serve the repository root over HTTP (do not open via file://).
-
-### Development Server (Recommended)
-
-The project includes a custom Node.js TypeScript development server with zero dependencies:
+The project now relies on Vite for both development and production builds.
 
 ```bash
-# Start the dev server
+# Start the dev server with HMR at http://localhost:3000
 npm run dev
 
-# Server runs at http://localhost:3000
-# Set PORT and HOST environment variables to customize
+# Build for production (outputs to dist/)
+npm run build
+
+# Preview the production build locally
+npm run preview
 ```
 
-**Features:**
+Environment variables:
 
-- **Live Hot Reload** — automatically refreshes browser when files change
-- TypeScript support using Node.js 24+ native type stripping
-- Proper MIME types for ES modules
-- Security protections (path traversal prevention)
-- Custom 404 page with gradient styling
-- Request logging with color-coded status
-- HEAD request support
-- Server-Sent Events (SSE) for reload notifications
-- Recursive file watching with smart debouncing
-- No third-party dependencies
-
-**Live Reload Configuration:**
-
-```bash
-# Disable live reload (enabled by default)
-LIVE_RELOAD=false npm run dev
-
-# Custom port and host
-PORT=8080 HOST=0.0.0.0 npm run dev
-```
-
-The live reload feature:
-
-- Watches all files in the project directory recursively
-- Automatically injects reload script into HTML files
-- Uses Server-Sent Events for instant browser updates
-- Ignores `node_modules`, `.git`, and server files
-- Debounces multiple rapid changes (100ms)
+- `PORT` — override the dev server port (defaults to 3000)
+- `HOST` — set `0.0.0.0` to expose on LAN
+- `FABLE_BASE_PATH` — customize the base path used for routing and asset URLs (defaults to `/`)
 
 ## Linting and Formatting
 

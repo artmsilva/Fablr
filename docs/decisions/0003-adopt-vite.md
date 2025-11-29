@@ -1,7 +1,7 @@
 # ADR 0003: Adopt Vite with Import-Map Plugin
 
 - **Date**: 2025-11-29
-- **Status**: Proposed
+- **Status**: Accepted
 - **Driver**: Codex
 
 ## Context
@@ -42,8 +42,8 @@ Adopt [Vite](https://vitejs.dev/) as the canonical dev server and build pipeline
 1. Extract the current `<script type="importmap">` from `src/index.html` into `config/import-map.json`.
 2. Create `vite.config.ts` that:
    - Imports the plugin.
-   - Sets `base` to `process.env.FABLE_BASE_PATH ?? "/fable/"`.
-   - Configures `build.rollupOptions.input` to point at `src/index.html`.
+   - Sets `base` to `process.env.FABLE_BASE_PATH ?? "/"`.
+   - Uses `src/` as the Vite root while outputting to `dist/`.
 3. Update `package.json` scripts:
    - `"dev": "vite"`
    - `"build": "vite build"`
@@ -73,7 +73,7 @@ Adopt [Vite](https://vitejs.dev/) as the canonical dev server and build pipeline
 
 ## Follow-Up Actions
 
-1. Implement `vite-plugin-import-map` and land `vite.config.ts`.
-2. Update deployment workflow to run `vite build`.
-3. Delete superseded scripts (`build.ts`, `server.ts`) after verifying parity.
-4. Update documentation (`README.md`, `AGENTS.md`) to describe the new workflow and plugin usage.
+1. ✅ Implemented `vite-plugin-import-map` and landed `vite.config.ts`.
+2. ✅ Update deployment workflow to run `vite build`.
+3. ✅ Delete superseded scripts (`build.ts`, `server.ts`) after verifying parity.
+4. ✅ Update documentation (`README.md`, `AGENTS.md`) to describe the new workflow and plugin usage.
