@@ -10,16 +10,20 @@ export class FablePlayroomEditor extends LitElement {
 
   static styles = css`
     :host {
-      display: block;
+      display: flex;
+      flex-direction: column;
       height: 100%;
       background: var(--color-background);
     }
 
     .editor-container {
+      flex: 1;
+      min-height: 0;
       height: 100%;
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
       overflow: hidden;
+      position: relative;
     }
 
     .loading-overlay {
@@ -59,6 +63,7 @@ export class FablePlayroomEditor extends LitElement {
       background: var(--color-background-secondary);
       border-bottom: 1px solid var(--border-color);
       gap: var(--space-2);
+      flex-shrink: 0;
     }
 
     .toolbar-button {
@@ -92,6 +97,7 @@ export class FablePlayroomEditor extends LitElement {
     this.monacoLoader = new MonacoLoader();
     this.editor = null;
     this.isLoading = true;
+    this._monacoStylesInjected = false;
   }
 
   async firstUpdated() {
@@ -102,6 +108,7 @@ export class FablePlayroomEditor extends LitElement {
     const container = this.shadowRoot.querySelector(".editor-container");
 
     try {
+      this._injectMonacoStyles();
       this.editor = await this.monacoLoader.createEditor(container, {
         value: this.value,
         theme: this.theme,
@@ -136,6 +143,21 @@ export class FablePlayroomEditor extends LitElement {
       this.isLoading = false;
       this.requestUpdate();
     }
+  }
+
+  _injectMonacoStyles() {
+    if (this._monacoStylesInjected || !this.shadowRoot) return;
+
+    // Monaco CSS is injected globally by the loader; clone it into the shadow root
+    const monacoStyles = Array.from(document.querySelectorAll("style")).filter((style) =>
+      style.textContent.includes(".monaco-editor")
+    );
+
+    monacoStyles.forEach((style) => {
+      this.shadowRoot.appendChild(style.cloneNode(true));
+    });
+
+    this._monacoStylesInjected = true;
   }
 
   updated(changedProperties) {

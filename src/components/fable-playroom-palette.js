@@ -175,7 +175,10 @@ export class FablePlayroomPalette extends LitElement {
       }));
 
     // Load taxonomy groups
-    this._taxonomyGroups = [{ id: "all", label: "All" }, ...getHomepageTaxonomyGroups()];
+    this._taxonomyGroups = [
+      { id: "all", label: "All" },
+      ...getHomepageTaxonomyGroups(),
+    ];
 
     this._filterComponents();
   }
@@ -188,20 +191,23 @@ export class FablePlayroomPalette extends LitElement {
       "fable-button": `<fable-button variant="primary">
   Button Text
 </fable-button>`,
-      "fable-input": `<fable-input placeholder="Enter text" value="" />`,
-      "fable-card": `<fable-card>
-  <h3 slot="title">Card Title</h3>
-  <p slot="body">Card content goes here</p>
+      "fable-input": `<fable-input label="Label" placeholder="Enter text"></fable-input>`,
+      "fable-card": `<fable-card title="Card Title">
+  <p>Card content goes here</p>
 </fable-card>`,
       "fable-badge": '<fable-badge tone="neutral">Badge</fable-badge>',
-      "fable-checkbox": '<fable-checkbox checked={false} label="Option" />',
-      "fable-textarea": '<fable-textarea placeholder="Enter text" value="" />',
-      "fable-select": '<fable-select value="" options={[]} />',
-      "fable-stack": `<fable-stack gap="var(--space-4)">
+      "fable-checkbox": '<fable-checkbox label="Option"></fable-checkbox>',
+      "fable-textarea": '<fable-textarea label="Message" placeholder="Enter text"></fable-textarea>',
+      "fable-select": `<fable-select label="Choose one" value="option2">
+  <fable-select-option value="option1">Option 1</fable-select-option>
+  <fable-select-option value="option2">Option 2</fable-select-option>
+  <fable-select-option value="option3">Option 3</fable-select-option>
+</fable-select>`,
+      "fable-stack": `<fable-stack>
   <div>Content 1</div>
   <div>Content 2</div>
 </fable-stack>`,
-      "fable-icon-button": '<fable-icon-button icon="edit" />',
+      "fable-icon-button": '<fable-icon-button aria-label="Edit">✏️</fable-icon-button>',
     };
 
     return (
@@ -217,7 +223,9 @@ export class FablePlayroomPalette extends LitElement {
 
     // Filter by group
     if (this._selectedGroup !== "all") {
-      filtered = filtered.filter((comp) => comp.taxonomy?.group === this._selectedGroup);
+      filtered = filtered.filter(
+        (comp) => comp.taxonomy?.group === this._selectedGroup,
+      );
     }
 
     // Filter by search query
@@ -227,8 +235,10 @@ export class FablePlayroomPalette extends LitElement {
         (comp) =>
           comp.title.toLowerCase().includes(query) ||
           comp.description?.toLowerCase().includes(query) ||
-          comp.keywords?.some((keyword) => keyword.toLowerCase().includes(query)) ||
-          comp.component.toLowerCase().includes(query)
+          comp.keywords?.some((keyword) =>
+            keyword.toLowerCase().includes(query),
+          ) ||
+          comp.component.toLowerCase().includes(query),
       );
     }
 
@@ -270,7 +280,7 @@ export class FablePlayroomPalette extends LitElement {
         component: component.component,
         snippet: component.snippet,
         metadata: component,
-      })
+      }),
     );
 
     // Add visual feedback
@@ -292,79 +302,83 @@ export class FablePlayroomPalette extends LitElement {
           metadata: component,
         },
         bubbles: true,
-      })
+        composed: true,
+      }),
     );
   }
 
   render() {
     return html`
       <div class="palette-header">
-        <input 
-          type="text" 
-          class="search-input" 
+        <input
+          type="text"
+          class="search-input"
           placeholder="Search components..."
           value=${this._searchQuery}
           @input=${this._handleSearch}
         />
-        
+
         <div class="group-filters">
           ${this._taxonomyGroups.map(
             (group) => html`
-            <button 
-              class="group-chip ${this._selectedGroup === group.id ? "active" : ""}"
-              data-group=${group.id}
-              @click=${this._handleGroupSelect}
-            >
-              ${group.label}
-            </button>
-          `
+              <button
+                class="group-chip ${this._selectedGroup === group.id
+                  ? "active"
+                  : ""}"
+                data-group=${group.id}
+                @click=${this._handleGroupSelect}
+              >
+                ${group.label}
+              </button>
+            `,
           )}
         </div>
       </div>
 
       <div class="components-list">
-        ${
-          Object.keys(this._filteredComponents).length === 0
-            ? html`
-          <div class="empty-state">
-            <p>No components found</p>
-            <p>Try adjusting your search or filters</p>
-          </div>
-        `
-            : ""
-        }
-        
-        ${Object.entries(this._filteredComponents).map(
-          ([groupName, components]) => html`
-          <div class="component-group">
-            <h3 class="group-title">${groupName}</h3>
-            
-            ${components.map(
-              (component) => html`
-              <div 
-                class="component-item"
-                draggable="true"
-                @dragstart=${(e) => this._handleComponentDragStart(e, component)}
-                @dragend=${this._handleComponentDragEnd}
-                @click=${() => this._handleComponentClick(component)}
-              >
-                <div class="component-icon">
-                  🧩
-                </div>
-                
-                <div class="component-info">
-                  <div class="component-name">${component.title}</div>
-                  <div class="component-description">${component.description}</div>
-                </div>
-                
-                <div class="component-status ${component.taxonomy?.status || "beta"}">
-                  ${component.taxonomy?.status || "beta"}
-                </div>
+        ${Object.keys(this._filteredComponents).length === 0
+          ? html`
+              <div class="empty-state">
+                <p>No components found</p>
+                <p>Try adjusting your search or filters</p>
               </div>
             `
-            )}
-          </div>
-        `
+          : ""}
+        ${Object.entries(this._filteredComponents).map(
+          ([groupName, components]) => html`
+            <div class="component-group">
+              <h3 class="group-title">${groupName}</h3>
+
+              ${components.map(
+                (component) => html`
+                  <div
+                    class="component-item"
+                    draggable="true"
+                    @dragstart=${(e) =>
+                      this._handleComponentDragStart(e, component)}
+                    @dragend=${this._handleComponentDragEnd}
+                    @click=${() => this._handleComponentClick(component)}
+                  >
+                    <div class="component-icon">🧩</div>
+
+                    <div class="component-info">
+                      <div class="component-name">${component.title}</div>
+                      <div class="component-description">
+                        ${component.description}
+                      </div>
+                    </div>
+
+                    <div
+                      class="component-status ${component.taxonomy?.status ||
+                      "beta"}"
+                    >
+                      ${component.taxonomy?.status || "beta"}
+                    </div>
+                  </div>
+                `,
+              )}
+            </div>
+          `,
         )}
       </div>
     `;

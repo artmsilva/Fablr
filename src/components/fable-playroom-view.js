@@ -1,4 +1,7 @@
 import { LitElement, html, css } from "lit";
+import "./fable-playroom-inspector.js";
+import { DSLParser } from "../playroom/dsl-parser.js";
+import "./fable-playroom-inspector.js";
 
 export class FablePlayroomView extends LitElement {
   static properties = {
@@ -6,6 +9,7 @@ export class FablePlayroomView extends LitElement {
     _theme: { state: true },
     _tokens: { state: true },
     _args: { state: true },
+    _selectedNode: { state: true },
   };
 
   static styles = css`
@@ -18,15 +22,20 @@ export class FablePlayroomView extends LitElement {
     .playroom-layout {
       display: grid;
       grid-template-columns: 280px 1fr 320px;
+      grid-template-rows: 1fr;
       height: 100vh;
+      min-height: 0;
       gap: var(--space-2);
       padding: var(--space-2);
+      align-items: stretch;
     }
 
     .palette-panel {
       background: var(--color-background);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
+      min-height: 0;
+      height: 100%;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -36,6 +45,8 @@ export class FablePlayroomView extends LitElement {
       display: flex;
       flex-direction: column;
       gap: var(--space-2);
+      height: 100%;
+      min-height: 0;
     }
 
     .editor-container {
@@ -45,6 +56,8 @@ export class FablePlayroomView extends LitElement {
       border-radius: var(--border-radius-sm);
       overflow: hidden;
       min-height: 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .preview-container {
@@ -54,12 +67,16 @@ export class FablePlayroomView extends LitElement {
       border-radius: var(--border-radius-sm);
       overflow: hidden;
       min-height: 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .inspector-panel {
       background: var(--color-background);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-sm);
+      height: 100%;
+      min-height: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -96,11 +113,28 @@ export class FablePlayroomView extends LitElement {
 
   constructor() {
     super();
-    this._code =
-      '<!-- Start composing your UI -->\n<fable-button variant="primary">\n  Click me\n</fable-button>';
+    this._code = `<!-- Start composing your UI -->
+<fable-card title="Playroom Sample">
+  <fable-stack>
+    <fable-input label="Name" placeholder="Ada Lovelace"></fable-input>
+    <fable-textarea label="Notes" placeholder="Add details"></fable-textarea>
+    <fable-select label="Role" value="designer">
+      <fable-select-option value="designer">Designer</fable-select-option>
+      <fable-select-option value="engineer">Engineer</fable-select-option>
+      <fable-select-option value="pm">Product</fable-select-option>
+    </fable-select>
+    <fable-checkbox label="Subscribe to updates"></fable-checkbox>
+    <div style="display: flex; align-items: center; gap: var(--space-2);">
+      <fable-button variant="primary">Save</fable-button>
+      <fable-icon-button aria-label="Edit">✏️</fable-icon-button>
+    </div>
+  </fable-stack>
+</fable-card>`;
     this._theme = "light";
     this._tokens = {};
     this._args = {};
+    this._selectedNode = null;
+    this._parser = new DSLParser();
   }
 
   connectedCallback() {
@@ -122,14 +156,47 @@ export class FablePlayroomView extends LitElement {
     this._code = event.detail.value;
   }
 
+  _handleInsertText(event) {
+    const detail = event?.detail || {};
+    const snippet = detail.snippet || detail.text;
+    if (!snippet) return;
+
+    const insertion = snippet.endsWith("\n") ? snippet : `${snippet}\n`;
+    const needsNewline = this._code && !this._code.endsWith("\n") ? "\n" : "";
+    this._code = `${this._code || ""}${needsNewline}${insertion}`;
+  }
+
   _handleNodeSelected(event) {
-    // Handle node selection from preview
-    console.log("Node selected:", event.detail);
+    this._selectedNode = event.detail;
   }
 
   _handleInspectorUpdate(event) {
-    // Handle property updates from inspector
-    this._code = event.detail.code;
+    const { nodeId, props } = event.detail || {};
+    if (!nodeId || !props) return;
+
+    const ast = this._parser.parse(this._code);
+
+    const updateNode = (node, path) => {
+      if (!node || node.type !== "component") return;
+      if (path === nodeId) {
+        node.props = this._normalizeProps(props);
+      }
+      (node.slots || []).forEach((child, idx) => updateNode(child, `${path}.${idx}`));
+    };
+
+    if (Array.isArray(ast)) {
+      ast.forEach((node, idx) => updateNode(node, `root.${idx}`));
+    }
+
+    this._code = this._parser.generateHTML(ast, {}, "root", false);
+  }
+
+  _normalizeProps(props) {
+    const normalized = {};
+    for (const [key, value] of Object.entries(props)) {
+      normalized[key] = this._parser.processInterpolation(value);
+    }
+    return normalized;
   }
 
   render() {
@@ -137,7 +204,7 @@ export class FablePlayroomView extends LitElement {
       <div class="playroom-layout">
         <!-- Component Palette -->
         <div class="palette-panel">
-          <fable-playroom-palette 
+          <fable-playroom-palette
             @component-insert=${this._handleInsertText}
           ></fable-playroom-palette>
         </div>
@@ -146,7 +213,7 @@ export class FablePlayroomView extends LitElement {
         <div class="editor-preview-panel">
           <!-- Code Editor -->
           <div class="editor-container">
-            <fable-playroom-editor 
+            <fable-playroom-editor
               .value=${this._code}
               .theme=${this._theme}
               .readOnly=${false}
@@ -157,7 +224,7 @@ export class FablePlayroomView extends LitElement {
 
           <!-- Live Preview -->
           <div class="preview-container">
-            <fable-playroom-preview 
+            <fable-playroom-preview
               .code=${this._code}
               .theme=${this._theme}
               .tokens=${this._tokens}
@@ -171,15 +238,10 @@ export class FablePlayroomView extends LitElement {
         <div class="inspector-panel">
           <div class="panel-header">Properties</div>
           <div class="panel-content">
-            <div class="placeholder">
-              <div>
-                <div class="placeholder-icon">⚙️</div>
-                <div>Properties Inspector</div>
-                <div style="font-size: var(--font-size-xs); margin-top: var(--space-1);">
-                  Select element to edit properties
-                </div>
-              </div>
-            </div>
+            <fable-playroom-inspector
+              .node=${this._selectedNode}
+              @prop-change=${this._handleInspectorUpdate}
+            ></fable-playroom-inspector>
           </div>
         </div>
       </div>

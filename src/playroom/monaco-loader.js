@@ -1,3 +1,5 @@
+import "monaco-editor/min/vs/editor/editor.main.css";
+
 export class MonacoLoader {
   constructor() {
     this.loadingPromise = null;
@@ -5,7 +7,7 @@ export class MonacoLoader {
     this.editor = null;
   }
 
-  // Dynamically load Monaco from CDN
+  // Dynamically load Monaco (bundled locally)
   async loadMonaco() {
     if (this.monaco) {
       return this.monaco;
@@ -15,27 +17,45 @@ export class MonacoLoader {
       return this.loadingPromise;
     }
 
-    this.loadingPromise = this._loadFromCDN();
+    this.loadingPromise = this._loadFromBundle();
     return this.loadingPromise;
   }
 
-  async _loadFromCDN() {
+  async _loadFromBundle() {
     try {
-      // Load Monaco loader script
-      await this._loadScript("https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js");
+      const [
+        monaco,
+        EditorWorker,
+        JsonWorker,
+        CssWorker,
+        HtmlWorker,
+        TsWorker,
+      ] = await Promise.all([
+        import("monaco-editor/esm/vs/editor/editor.api.js"),
+        import("monaco-editor/esm/vs/editor/editor.worker?worker"),
+        import("monaco-editor/esm/vs/language/json/json.worker?worker"),
+        import("monaco-editor/esm/vs/language/css/css.worker?worker"),
+        import("monaco-editor/esm/vs/language/html/html.worker?worker"),
+        import("monaco-editor/esm/vs/language/typescript/ts.worker?worker"),
+      ]);
 
-      // Configure Monaco
-      const require = globalThis.require;
-      require.config({
-        paths: {
-          vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs",
+      self.MonacoEnvironment = {
+        getWorker(_, label) {
+          switch (label) {
+            case "json":
+              return new JsonWorker.default();
+            case "css":
+              return new CssWorker.default();
+            case "html":
+              return new HtmlWorker.default();
+            case "typescript":
+            case "javascript":
+              return new TsWorker.default();
+            default:
+              return new EditorWorker.default();
+          }
         },
-      });
-
-      // Load Monaco modules
-      const monaco = await new Promise((resolve, reject) => {
-        require(["vs/editor/editor.main"], resolve, reject);
-      });
+      };
 
       this.monaco = monaco;
       this._setupFableDSL(monaco);
@@ -45,16 +65,6 @@ export class MonacoLoader {
       console.error("Failed to load Monaco editor:", error);
       throw error;
     }
-  }
-
-  _loadScript(src) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
   }
 
   _setupFableDSL(monaco) {

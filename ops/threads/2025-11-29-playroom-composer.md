@@ -5,7 +5,7 @@
 | **Status** | `Active` |
 | **Owner** | `codex` |
 | **Start Date** | `2025-11-29` |
-| **Last Update** | `2025-11-29 16:00 PT` |
+| **Last Update** | `2025-11-29 18:05 PT` |
 | **Related Work** | `docs/specs/playroom.md`, `src/components/`, `src/playroom/` |
 | **Links** | `git rev-parse --short HEAD` |
 
@@ -35,6 +35,7 @@ Update this checklist as tasks evolve.
 - `2025-11-29 16:00 PT` — **Architecture Complete**: Created comprehensive playroom architecture document covering DSL parser, component palette, Monaco editor integration, sandboxed preview, props inspector, URL sharing, and persistence strategies. Detailed 4-week implementation roadmap with clear milestones and dependencies.
 - `2025-11-29 16:00 PT` — **Technical Specifications**: Designed complete technical architecture including security model (sandboxed iframe), performance optimizations (lazy loading, debounced updates), and integration points with existing Fable systems (metadata, store, router).
 - `2025-11-29 16:00 PT` — **Implementation Plan**: Created detailed implementation roadmap with weekly phases, specific deliverables, and success criteria for each phase.
+- `2025-11-29 18:05 PT` — **Phase 1 Progress**: Hooked up Monaco editor ↔ palette ↔ preview loop, fixed DSL parser to emit node arrays, added palette insert plumbing, and shipped a working inline preview renderer so playroom loads and reflects code edits in real time (iframe sandboxing deferred to later pass).
 
 ## Current Risks / Blockers
 

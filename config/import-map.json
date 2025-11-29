@@ -4,6 +4,7 @@
     "@design-system/": "./design-system/",
     "@store": "./store/index.js",
     "@utils": "./utils/index.js",
-    "@config": "./config.js"
+    "@config": "./config.js",
+    "@metadata": "./metadata/index.js"
   }
 }

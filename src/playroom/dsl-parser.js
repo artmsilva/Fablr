@@ -11,8 +11,13 @@ export class DSLParser {
   // Parse DSL string to AST
   parse(dslString) {
     try {
-      const htmlAST = parseDocument(dslString);
-      return this.processNode(htmlAST);
+      const htmlAST = parseDocument(dslString, {
+        xmlMode: true,
+        recognizeSelfClosing: true,
+      });
+      return (htmlAST?.children || [])
+        .map((child) => this.processNode(child))
+        .filter(Boolean);
     } catch (error) {
       throw new Error(`DSL parsing failed: ${error.message}`);
     }
@@ -20,6 +25,8 @@ export class DSLParser {
 
   // Process HTML node and add Fable-specific features
   processNode(node) {
+    if (!node) return null;
+
     if (node.type === "tag") {
       return this.processComponentNode(node);
     } else if (node.type === "text") {
@@ -145,13 +152,17 @@ export class DSLParser {
   }
 
   // Generate HTML from AST for preview
-  generateHTML(ast, context = {}) {
+  generateHTML(ast, context = {}, path = "root", includeNodeIds = false) {
     if (Array.isArray(ast)) {
-      return ast.map((node) => this.generateHTML(node, context)).join("");
+      return ast
+        .map((node, index) =>
+          this.generateHTML(node, context, `${path}.${index}`, includeNodeIds),
+        )
+        .join("");
     }
 
     if (ast.type === "component") {
-      return this.generateComponentHTML(ast, context);
+      return this.generateComponentHTML(ast, context, path, includeNodeIds);
     } else if (ast.type === "text") {
       return this.processTextContent(ast.content, context);
     }
@@ -159,15 +170,23 @@ export class DSLParser {
   }
 
   // Generate component HTML with resolved values
-  generateComponentHTML(node, context) {
+  generateComponentHTML(node, context, path, includeNodeIds) {
     const props = this.resolveProps(node.props, context);
     const propsString = Object.entries(props)
       .map(([key, value]) => `${key}="${this.escapeHTML(value)}"`)
       .join(" ");
 
-    const slotsHTML = node.slots.map((slot) => this.generateHTML(slot, context)).join("");
+    const slotsHTML = node.slots
+      .map((slot, index) =>
+        this.generateHTML(slot, context, `${path}.${index}`, includeNodeIds),
+      )
+      .join("");
 
-    const openingTag = propsString ? `<${node.tagName} ${propsString}>` : `<${node.tagName}>`;
+    const dataAttr = includeNodeIds && path ? ` data-playroom-id="${path}"` : "";
+
+    const openingTag = propsString
+      ? `<${node.tagName}${dataAttr} ${propsString}>`
+      : `<${node.tagName}${dataAttr}>`;
     const closingTag = `</${node.tagName}>`;
 
     return `${openingTag}${slotsHTML}${closingTag}`;
